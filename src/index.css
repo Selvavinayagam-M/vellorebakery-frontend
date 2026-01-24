@@ -1,0 +1,69 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --color-brand-jaggery: #6D3D1F;
+  --color-brand-mahogany: #4A2c20;
+  --color-brand-turmeric: #E6A000;
+  --color-brand-cardamom: #6B8E23;
+  --color-brand-cardamom-light: #EEF5E5;
+  --color-brand-coconut: #FAF7F2;
+  --color-brand-black: #2D2420;
+
+  /* Keeping legacy names mapped to new palette for backward compatibility during migration */
+  --color-brand-maroon: var(--color-brand-jaggery);
+  --color-brand-gold: var(--color-brand-turmeric);
+  --color-brand-cream: var(--color-brand-coconut);
+
+  --font-sans: "Outfit", system-ui, sans-serif;
+  --font-serif: "Playfair Display", Georgia, serif;
+
+  --animate-float: float 6s ease-in-out infinite;
+
+  @keyframes float {
+
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-brand-coconut text-brand-black font-sans antialiased;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-serif font-bold text-brand-mahogany;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply px-6 py-3 bg-brand-jaggery text-white font-medium rounded-lg hover:bg-brand-mahogany transition-all duration-300 shadow-md hover:shadow-lg active:scale-95 flex items-center justify-center gap-2;
+  }
+
+  .btn-secondary {
+    @apply px-6 py-3 bg-brand-turmeric text-brand-mahogany font-bold rounded-lg hover:bg-yellow-500 transition-all duration-300 shadow-md hover:shadow-lg active:scale-95 flex items-center justify-center gap-2;
+  }
+
+  .card-hover {
+    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-xl;
+  }
+
+  .text-shadow {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  }
+}
