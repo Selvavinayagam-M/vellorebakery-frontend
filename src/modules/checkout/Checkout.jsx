@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle, CreditCard, Truck, MapPin, Smartphone, Building, Banknote } from 'lucide-react';
-import Button from '../../shared/components/Button';
-import Input from '../../shared/components/Input';
-import Card from '../../shared/components/Card';
+import Button from '@/shared/components/Button';
+import Input from '@/shared/components/Input';
+import Card from '@/shared/components/Card';
 import { setShippingAddress, setStep, startCheckoutProcess, checkoutSuccess } from '../../store/checkoutSlice';
 import { createOrderSuccess } from '../../store/orderSlice';
 import { clearCart } from '../../store/cartSlice';
@@ -189,8 +189,13 @@ const Checkout = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { step, shippingAddress } = useSelector((state) => state.checkout);
-    const { items, totalAmount, deliveryCharge } = useSelector((state) => state.cart);
-    const finalAmount = totalAmount + (totalAmount > 1000 ? 0 : deliveryCharge);
+    const { items, totalAmount } = useSelector((state) => state.cart);
+    const settings = useSelector((state) => state.settings);
+
+    // Calculate Delivery
+    const deliveryCharge = settings.enableDelivery ? settings.deliveryCharge : 0;
+    const isFreeDelivery = totalAmount > (settings.freeDeliveryThreshold || 1000);
+    const finalAmount = totalAmount + (isFreeDelivery ? 0 : deliveryCharge);
 
     useEffect(() => {
         if (items.length === 0) {
@@ -303,7 +308,7 @@ const Checkout = () => {
                                 </div>
                                 <div className="flex justify-between">
                                     <span>Delivery</span>
-                                    <span className="text-green-600 font-bold">{totalAmount > 1000 ? 'FREE' : `₹${deliveryCharge}`}</span>
+                                    <span className="text-green-600 font-bold">{isFreeDelivery ? 'FREE' : `₹${deliveryCharge}`}</span>
                                 </div>
                             </div>
                             <div className="flex justify-between font-bold text-xl text-brand-maroon">

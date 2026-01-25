@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateSettings, fetchSettings } from '../../../store/adminSettingsSlice';
+import { updateSettings } from '../../../store/settingsSlice';
 import { Save, Bell, Shield, Store, Truck } from 'lucide-react';
 
 const SettingsPage = () => {
     const dispatch = useDispatch();
-    const settings = useSelector((state) => state.adminSettings);
+    const settings = useSelector((state) => state.settings);
 
+    // Sync form with store updates
     React.useEffect(() => {
-        dispatch(fetchSettings());
-    }, [dispatch]);
+        if (settings) {
+            setFormData(prev => ({ ...prev, ...settings }));
+        }
+    }, [settings]);
 
     // Local state for form management
     const [formData, setFormData] = useState(settings);

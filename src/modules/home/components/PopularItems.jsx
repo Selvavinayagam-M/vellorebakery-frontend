@@ -37,20 +37,30 @@ const PopularItems = ({ products }) => {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                    {products?.map((product, index) => (
-                        <motion.div
-                            key={product.id}
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: index * 0.1, duration: 0.5 }}
-                        >
-                            <ProductCard
-                                product={product}
-                                onAddToCart={(p) => dispatch(addToCart(p))}
-                            />
-                        </motion.div>
-                    ))}
+                    {products?.map((product, index) => {
+                        // Logic: First 2 from Left (-60), Last 2 from Right (60)
+                        // For mobile (small screens), we might want simpler up-fade, but here we enforce the requested logic
+                        const initialX = index < 2 ? -60 : 60;
+
+                        return (
+                            <motion.div
+                                key={product.id}
+                                initial={{ opacity: 0, x: initialX }}
+                                whileInView={{ opacity: 1, x: 0 }}
+                                viewport={{ once: true, margin: "-50px" }}
+                                transition={{
+                                    duration: 0.8,
+                                    ease: "easeOut",
+                                    delay: index * 0.15 // Slight stagger for visual layering
+                                }}
+                            >
+                                <ProductCard
+                                    product={product}
+                                    onAddToCart={(p) => dispatch(addToCart(p))}
+                                />
+                            </motion.div>
+                        );
+                    })}
                 </div>
             </div>
         </section>

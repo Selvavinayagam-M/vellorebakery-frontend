@@ -11,7 +11,10 @@ export const fetchReports = createAsyncThunk(
 const initialState = {
     dailySales: [],
     monthlyRevenue: 0,
+    monthlyRevenue: 0,
     totalOrders: 0,
+    totalCustomers: 0, // NEW
+    pendingCOD: 0,     // NEW
     topProducts: [],
     isLoading: false,
     error: null,
@@ -35,6 +38,8 @@ const adminReportsSlice = createSlice({
                 state.dailySales = action.payload.dailySales;
                 state.monthlyRevenue = action.payload.monthlyRevenue;
                 state.totalOrders = action.payload.totalOrders;
+                state.totalCustomers = action.payload.totalCustomers; // NEW
+                state.pendingCOD = action.payload.pendingCOD;         // NEW
                 state.topProducts = action.payload.topProducts;
             })
             .addCase(fetchReports.rejected, (state, action) => {

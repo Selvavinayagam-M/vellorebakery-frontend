@@ -90,7 +90,7 @@ const adminProductsSlice = createSlice({
             })
             // Delete
             .addCase(deleteProduct.fulfilled, (state, action) => {
-                state.items = state.items.filter(p => p.id !== action.payload);
+                state.items = state.items.filter(p => p.id !== action.payload && p._id !== action.payload);
             })
             // Toggle Stock
             .addCase(toggleStock.fulfilled, (state, action) => {
@@ -101,7 +101,7 @@ const adminProductsSlice = createSlice({
             })
             // Toggle Active
             .addCase(toggleActive.fulfilled, (state, action) => {
-                const product = state.items.find(p => p.id === action.payload.id);
+                const product = state.items.find(p => (p._id === action.payload._id) || (p.id === action.payload.id));
                 if (product) {
                     product.isActive = action.payload.isActive;
                 }

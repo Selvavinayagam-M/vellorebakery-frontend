@@ -1,20 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Section 1 Images
-import s1img1 from '../../../assets/images/craftedwithcare/section1/section1-img1.png';
-import s1img2 from '../../../assets/images/craftedwithcare/section1/section1-img2.png';
-import s1img3 from '../../../assets/images/craftedwithcare/section1/section1-img3.png';
-
-// Section 2 Images
-import s2img1 from '../../../assets/images/craftedwithcare/section2/section2-img1.png';
-import s2img2 from '../../../assets/images/craftedwithcare/section2/section2-img2.png';
-import s2img3 from '../../../assets/images/craftedwithcare/section2/section2-img3.png';
-
-// Section 3 Images
-import s3img1 from '../../../assets/images/craftedwithcare/section3/section3-img1.png';
-import s3img2 from '../../../assets/images/craftedwithcare/section3/section3-img2.png';
-import s3img3 from '../../../assets/images/craftedwithcare/section3/section3-img3.png';
+import { CRAFTED_IMAGES } from '../../../assets/images';
 
 
 const FEATURES_DATA = [
@@ -23,7 +10,7 @@ const FEATURES_DATA = [
         title: "Purity You Can Trust",
         subtitle: "100% Ghee & Natural",
         description: "We use only the finest A2 Ghee and organic ingredients. No preservatives, no additives—just pure, authentic taste passed down through generations.",
-        images: [s1img1, s1img2, s1img3],
+        images: CRAFTED_IMAGES.section1,
         stat: "100% Pure"
     },
     {
@@ -31,7 +18,7 @@ const FEATURES_DATA = [
         title: "Fresh from Kitchen to You",
         subtitle: "Made Fresh Daily",
         description: "Every sweet is prepared fresh upon order in our traditional kitchen, ensuring you get the same aroma and taste as if it were made in your own home.",
-        images: [s2img1, s2img2, s2img3],
+        images: CRAFTED_IMAGES.section2,
         stat: "24h Fresh"
     },
     {
@@ -39,7 +26,7 @@ const FEATURES_DATA = [
         title: "Loved by thousands",
         subtitle: "Community Favorite",
         description: "Over 10,000 happy families trust Vellore Sweets for their celebrations. Taste the tradition that everyone is talking about.",
-        images: [s3img1, s3img2, s3img3],
+        images: CRAFTED_IMAGES.section3,
         stat: "10k+ Happy"
     }
 ];

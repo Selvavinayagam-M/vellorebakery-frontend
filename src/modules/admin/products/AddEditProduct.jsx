@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Save, X, Plus, Trash } from 'lucide-react';
 import { addProduct, updateProduct } from '../../../store/adminProductsSlice';
+import { uploadToCloudinary } from '../../../shared/services/cloudinary.service';
 import ProductImageUpload from './ProductImageUpload';
 import { AdminPageHeader } from '../shared/AdminComponents';
 
@@ -17,6 +18,7 @@ const AddEditProduct = () => {
     const initialState = {
         name: '',
         category: 'sweets',
+        subCategory: '',
         description: '',
         ingredients: '',
         shelfLife: '',
@@ -40,9 +42,25 @@ const AddEditProduct = () => {
     // Load Data if Edit Mode
     useEffect(() => {
         if (isEditMode) {
-            const product = items.find(p => p.id === id);
+            const product = items.find(p => (p.id === id) || (p._id === id));
             if (product) {
-                setFormData(product);
+                // Manually construct form data because backend model is different from form state
+                setFormData({
+                    ...initialState, // Keep initial structure safe
+                    ...product, // Overwrite with product data
+                    // Propagate subCategory safely (backend might return subCategory or subcategory)
+                    subCategory: product.subCategory || product.subcategory || '',
+                    // Ensure variants exist. Backend is flat (price, weight), Frontend form uses variants array.
+                    variants: product.variants || [{
+                        weight: product.weight || '',
+                        price: product.price || ''
+                    }],
+                    // Map stock to stockQuantity if needed
+                    stockQuantity: product.stock || 0,
+                    // Ensure flags exist or default
+                    flags: { ...initialState.flags, ...product.flags }
+                });
+
                 // Handle image logic - ensuring array format
                 const loadedImages = product.image ? [product.image, ...(product.additionalImages || [])] : [];
                 setImages(loadedImages);
@@ -91,43 +109,91 @@ const AddEditProduct = () => {
         }
 
         try {
-            // Upload Main Image to Cloudinary if it's a File
-            let imageUrl = formData.image;
-            let imagePublicId = formData.imagePublicId;
+            // Prepare FormData (actually we should favor JSON now, but legacy code uses FormData wrapper)
+            // Let's stick to FormData payload construction but with URL strings inside.
+            const formDataPayload = new FormData();
 
-            const currentMainImage = images[primaryImageIndex];
-
-            // Helper to check if we need to upload
-            const needsUpload = (currentMainImage instanceof File) || (typeof currentMainImage === 'object' && currentMainImage?.file);
-
-            if (needsUpload) {
-                const { uploadToCloudinary } = await import('../../../shared/services/cloudinary.service');
-                const fileToUpload = currentMainImage instanceof File ? currentMainImage : currentMainImage.file;
-
-                const result = await uploadToCloudinary(fileToUpload, formData.name);
-                imageUrl = result.url;
-                imagePublicId = result.publicId;
-            } else if (typeof currentMainImage === 'string') {
-                imageUrl = currentMainImage;
-                // keep existing imagePublicId
-            }
-
-            // Prepare Payload
             // Backend expects flat structure: price, weight, stock
             const primaryVariant = formData.variants[0] || { price: 0, weight: 'N/A' };
 
-            const payload = {
-                ...formData,
-                price: parseFloat(primaryVariant.price),
-                weight: primaryVariant.weight,
-                stock: parseInt(formData.stockQuantity),
-                image: imageUrl,
-                imagePublicId: imagePublicId,
-                // We are not handling additionalImages upload in this snippet for brevity
-                additionalImages: [],
-            };
+            formDataPayload.append('name', formData.name);
+            formDataPayload.append('category', formData.category);
 
-            const action = isEditMode ? updateProduct(payload) : addProduct(payload);
+            // Ensure subCategory is sent, fallback to existing if missing in state but present in original
+            const finalSubCategory = formData.subCategory || (isEditMode ? items.find(p => p.id === id || p._id === id)?.subCategory : '');
+            if (!finalSubCategory) {
+                alert("Please select a Sub Category");
+                return;
+            }
+            formDataPayload.append('subCategory', finalSubCategory);
+
+            formDataPayload.append('description', formData.description);
+            formDataPayload.append('ingredients', formData.ingredients);
+            formDataPayload.append('shelfLife', formData.shelfLife);
+            // Append variants as JSON string if backend doesn't support array in FormData easily or if we only use flat fields
+            formDataPayload.append('price', primaryVariant.price);
+            formDataPayload.append('weight', primaryVariant.weight);
+            formDataPayload.append('stock', formData.stockQuantity);
+
+            // Send flags as JSON string
+            formDataPayload.append('flags', JSON.stringify(formData.flags));
+            formDataPayload.append('isActive', formData.inStock);
+
+            // IMAGE HANDLING LOGIC
+            const currentMainImage = images[primaryImageIndex];
+            let imageUrl = '';
+            let imagePublicId = '';
+
+            // 1. Check if it is a File (New Upload Needed)
+            // 1. Check if it is a File (New Upload Needed)
+            if (currentMainImage instanceof File) {
+                // Upload to Cloudinary First
+                console.log('Uploading image to Cloudinary...');
+                const uploaded = await uploadToCloudinary(currentMainImage, formData.name);
+                imageUrl = uploaded.url;
+                imagePublicId = uploaded.publicId;
+
+            } else if (currentMainImage?.file instanceof File) {
+                // Handle nested file structure if any dropzone lib creates it
+                const uploaded = await uploadToCloudinary(currentMainImage.file, formData.name);
+                imageUrl = uploaded.url;
+                imagePublicId = uploaded.publicId;
+            } else if (typeof currentMainImage === 'string') {
+                // Existing URL
+                imageUrl = currentMainImage;
+                imagePublicId = formData.imagePublicId || ''; // Keep existing if available
+            } else if (currentMainImage?.preview) {
+                // Blob preview but actual file might be lost? 
+                // If using react-dropzone, the object IS the file with a preview property.
+                if (currentMainImage instanceof File) {
+                    const uploaded = await uploadToCloudinary(currentMainImage, formData.name);
+                    imageUrl = uploaded.url;
+                    imagePublicId = uploaded.publicId;
+                }
+            }
+
+            // Append URL string, NOT File object
+            if (imageUrl) {
+                // Use 'imageUrl' to avoid Multer conflict with 'image' file field
+                formDataPayload.append('imageUrl', imageUrl);
+                if (imagePublicId) {
+                    formDataPayload.append('imagePublicId', imagePublicId);
+                }
+            } else {
+                alert("Please select an image");
+                return;
+            }
+
+            if (isEditMode) {
+                if (!id) {
+                    alert("Error: Product ID is missing");
+                    return;
+                }
+                console.log("Updating product with ID:", id);
+                formDataPayload.append('id', id);
+            }
+
+            const action = isEditMode ? updateProduct(formDataPayload) : addProduct(formDataPayload);
 
             dispatch(action)
                 .unwrap()
@@ -184,6 +250,39 @@ const AddEditProduct = () => {
                                     <option value="snacks">Snacks</option>
                                     <option value="bakery">Bakery</option>
                                     <option value="savouries">Savouries</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Sub Category</label>
+                                <select
+                                    name="subCategory"
+                                    value={formData.subCategory}
+                                    onChange={handleChange}
+                                    required
+                                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-brand-turmeric focus:border-brand-turmeric"
+                                >
+                                    <option value="">Select Sub Category</option>
+                                    {formData.category === 'sweets' && (
+                                        <>
+                                            <option value="Ghee Sweets">Ghee Sweets</option>
+                                            <option value="Milk Sweets">Milk Sweets</option>
+                                            <option value="Dry Fruit Sweets">Dry Fruit Sweets</option>
+                                        </>
+                                    )}
+                                    {formData.category === 'bakery' && (
+                                        <>
+                                            <option value="Cakes & Pastries">Cakes & Pastries</option>
+                                            <option value="Breads & Buns">Breads & Buns</option>
+                                            <option value="Cookies">Cookies</option>
+                                        </>
+                                    )}
+                                    {formData.category === 'snacks' && (
+                                        <>
+                                            <option value="Savouries">Savouries</option>
+                                            <option value="Hot Snacks">Hot Snacks</option>
+                                            <option value="Chips & Crisps">Chips & Crisps</option>
+                                        </>
+                                    )}
                                 </select>
                             </div>
                             <div>

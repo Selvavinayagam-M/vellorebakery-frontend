@@ -69,7 +69,10 @@ const applyFilters = (orders, status, query) => {
         const matchesStatus = status === 'All' || order.status === status;
         const matchesQuery =
             order.id.toLowerCase().includes(query.toLowerCase()) ||
-            order.customer.toLowerCase().includes(query.toLowerCase());
+            order.orderId?.toLowerCase().includes(query.toLowerCase()) ||
+            (typeof order.customer === 'string'
+                ? order.customer.toLowerCase().includes(query.toLowerCase())
+                : order.customer?.name?.toLowerCase().includes(query.toLowerCase()));
         return matchesStatus && matchesQuery;
     });
 };

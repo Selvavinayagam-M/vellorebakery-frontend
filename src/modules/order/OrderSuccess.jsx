@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Check, Truck, Home } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import Button from '../../shared/components/Button';
+import Button from '@/shared/components/Button';
 import confetti from 'canvas-confetti';
 
 const OrderSuccess = () => {

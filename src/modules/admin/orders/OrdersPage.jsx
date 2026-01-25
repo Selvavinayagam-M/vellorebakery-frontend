@@ -12,10 +12,21 @@ const OrdersPage = () => {
         dispatch(fetchOrders());
     }, [dispatch]);
 
-    const handleStatusUpdate = (id, newStatus) => {
-        dispatch(updateOrderStatus({ id, status: newStatus }));
-        if (selectedOrder && selectedOrder.id === id) {
-            setSelectedOrder({ ...selectedOrder, status: newStatus });
+    const handleStatusUpdate = async (id, newStatus) => {
+        try {
+            await dispatch(updateOrderStatus({ id, status: newStatus })).unwrap();
+
+            // Success Message (Only after DB save)
+            // Using standard alert as requested/assumed, or simple console log if UI library missing
+            // Ideally this would be a toast
+            alert(`Order status updated to ${newStatus} successfully!`);
+
+            if (selectedOrder && selectedOrder.id === id) {
+                setSelectedOrder(prev => ({ ...prev, status: newStatus }));
+            }
+        } catch (error) {
+            alert('Failed to update order status. Please try again.');
+            console.error('Update failed:', error);
         }
     };
 
@@ -44,10 +55,11 @@ const OrdersPage = () => {
                             onChange={(e) => dispatch(setFilterStatus(e.target.value))}
                         >
                             <option value="All">All Status</option>
-                            <option value="Pending">Pending</option>
-                            <option value="Preparing">Preparing</option>
-                            <option value="Delivered">Delivered</option>
-                            <option value="Cancelled">Cancelled</option>
+                            <option value="PLACED">Placed</option>
+                            <option value="PREPARING">Preparing</option>
+                            <option value="OUT_FOR_DELIVERY">Out for Delivery</option>
+                            <option value="DELIVERED">Delivered</option>
+                            <option value="CANCELLED">Cancelled</option>
                         </select>
                     </div>
                 </div>
@@ -71,17 +83,18 @@ const OrdersPage = () => {
                             {filteredOrders.length > 0 ? (
                                 filteredOrders.map((order) => (
                                     <tr key={order.id} className="hover:bg-gray-50 transition-colors">
-                                        <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{order.id}</td>
-                                        <td className="px-6 py-4 text-gray-700 whitespace-nowrap">{order.customer}</td>
+                                        <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{order.orderId}</td>
+                                        <td className="px-6 py-4 text-gray-700 whitespace-nowrap">{order.customer?.name || order.customer}</td>
                                         <td className="px-6 py-4 text-gray-500 text-sm whitespace-nowrap">{order.date}</td>
                                         <td className="px-6 py-4 font-semibold text-gray-900 whitespace-nowrap">₹{order.total}</td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <span className={`px-3 py-1 rounded-full text-xs font-medium ${order.status === 'Delivered' ? 'bg-green-100 text-green-700' :
-                                                order.status === 'Pending' ? 'bg-yellow-100 text-yellow-700' :
-                                                    order.status === 'Preparing' ? 'bg-blue-100 text-blue-700' :
-                                                        'bg-red-100 text-red-700'
+                                            <span className={`px-3 py-1 rounded-full text-xs font-medium ${order.status === 'DELIVERED' ? 'bg-green-100 text-green-700' :
+                                                order.status === 'PLACED' ? 'bg-yellow-100 text-yellow-700' :
+                                                    order.status === 'PREPARING' ? 'bg-blue-100 text-blue-700' :
+                                                        order.status === 'OUT_FOR_DELIVERY' ? 'bg-purple-100 text-purple-700' :
+                                                            'bg-red-100 text-red-700'
                                                 }`}>
-                                                {order.status}
+                                                {order.status?.replace(/_/g, ' ') || order.status}
                                             </span>
                                         </td>
                                         <td className="px-6 py-4 text-right whitespace-nowrap">
@@ -111,27 +124,28 @@ const OrdersPage = () => {
                         filteredOrders.map((order) => (
                             <div key={order.id} className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col gap-3">
                                 <div className="flex justify-between items-start border-b border-gray-50 pb-2">
-                                    <span className="font-bold text-gray-900">{order.id}</span>
+                                    <span className="font-bold text-gray-900">{order.orderId}</span>
                                     <span className="font-bold text-gray-900">₹{order.total}</span>
                                 </div>
 
                                 <div className="flex justify-between items-center text-sm text-gray-600">
                                     <span className="flex items-center gap-2">
                                         <div className="w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center text-xs font-bold text-gray-500">
-                                            {order.customer.charAt(0)}
+                                            {(order.customer?.name || (typeof order.customer === 'string' ? order.customer : '?')).charAt(0)}
                                         </div>
-                                        {order.customer}
+                                        {order.customer?.name || order.customer}
                                     </span>
                                     <span className="text-xs">{order.date}</span>
                                 </div>
 
                                 <div className="flex items-center justify-between pt-1">
-                                    <span className={`px-3 py-1.5 rounded-full text-xs font-medium ${order.status === 'Delivered' ? 'bg-green-100 text-green-700' :
-                                        order.status === 'Pending' ? 'bg-yellow-100 text-yellow-700' :
-                                            order.status === 'Preparing' ? 'bg-blue-100 text-blue-700' :
-                                                'bg-red-100 text-red-700'
+                                    <span className={`px-3 py-1.5 rounded-full text-xs font-medium ${order.status === 'DELIVERED' ? 'bg-green-100 text-green-700' :
+                                        order.status === 'PLACED' ? 'bg-yellow-100 text-yellow-700' :
+                                            order.status === 'PREPARING' ? 'bg-blue-100 text-blue-700' :
+                                                order.status === 'OUT_FOR_DELIVERY' ? 'bg-purple-100 text-purple-700' :
+                                                    'bg-red-100 text-red-700'
                                         }`}>
-                                        {order.status}
+                                        {order.status?.replace(/_/g, ' ') || order.status}
                                     </span>
 
                                     <button
@@ -167,7 +181,7 @@ const OrdersPage = () => {
                         <div className="flex-1 overflow-y-auto p-6 space-y-6">
                             <div>
                                 <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Order ID</label>
-                                <p className="text-lg font-bold text-gray-900">{selectedOrder.id}</p>
+                                <p className="text-lg font-bold text-gray-900">{selectedOrder.orderId}</p>
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
@@ -185,11 +199,11 @@ const OrdersPage = () => {
                                 <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Customer</label>
                                 <div className="flex items-center gap-3 mt-2">
                                     <div className="w-10 h-10 rounded-full bg-brand-turmeric/20 text-brand-mahogany flex items-center justify-center font-bold">
-                                        {selectedOrder.customer.charAt(0)}
+                                        {(selectedOrder.customer?.name || (typeof selectedOrder.customer === 'string' ? selectedOrder.customer : '?')).charAt(0)}
                                     </div>
                                     <div>
-                                        <p className="font-semibold text-gray-900">{selectedOrder.customer}</p>
-                                        <p className="text-sm text-gray-500">View Profile</p>
+                                        <p className="font-semibold text-gray-900">{selectedOrder.customer?.name || selectedOrder.customer}</p>
+                                        <p className="text-sm text-gray-500">{selectedOrder.customer?.phone || ''}</p>
                                     </div>
                                 </div>
                             </div>
@@ -197,7 +211,7 @@ const OrdersPage = () => {
                             <div className="border-t border-gray-100 pt-6">
                                 <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">Update Status</label>
                                 <div className="grid grid-cols-2 gap-3">
-                                    {['Pending', 'Preparing', 'Delivered', 'Cancelled'].map((status) => (
+                                    {['PLACED', 'PREPARING', 'OUT_FOR_DELIVERY', 'DELIVERED', 'CANCELLED'].map((status) => (
                                         <button
                                             key={status}
                                             onClick={() => handleStatusUpdate(selectedOrder.id, status)}
@@ -206,7 +220,7 @@ const OrdersPage = () => {
                                                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                                                 }`}
                                         >
-                                            {status}
+                                            {status.replace(/_/g, ' ')}
                                         </button>
                                     ))}
                                 </div>

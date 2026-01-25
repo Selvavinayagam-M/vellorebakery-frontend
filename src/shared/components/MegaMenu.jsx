@@ -3,9 +3,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
 
-import mysorePakImg from '../../assets/images/hero-images/heroimg-Melt-in-Mouth Mysore Pak.png';
-import mixtureImg from '../../assets/images/curatedbakerycombos/familyteatime.png';
-import biscuitsImg from '../../assets/images/curatedbakerycombos/kidspartypack.png';
+import { HERO_IMAGES, COMBO_IMAGES } from '../../assets/images';
+
+const mysorePakImg = HERO_IMAGES.mysore;
+const mixtureImg = COMBO_IMAGES.familyTeaTime;
+const biscuitsImg = COMBO_IMAGES.kidsParty;
 
 const MegaMenu = ({ isOpen, activeCategory, onClose }) => {
     // Mock data for mega menu content - in real app, this could come from props or store
@@ -85,10 +87,10 @@ const MegaMenu = ({ isOpen, activeCategory, onClose }) => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 10 }}
                     transition={{ duration: 0.2 }}
-                    className="absolute top-full left-0 right-0 bg-white shadow-xl border-t border-brand-turmeric/20 z-50 overflow-hidden"
+                    className="absolute top-full left-0 right-0 bg-white shadow-xl z-50"
                     onMouseLeave={onClose}
                 >
-                    <div className="container mx-auto px-4 py-8">
+                    <div className="container mx-auto px-4 py-6">
                         <div className="flex flex-col md:flex-row gap-8">
                             {/* Categories Columns */}
                             <div className="flex-grow grid grid-cols-3 gap-8 border-r border-gray-100 pr-8">

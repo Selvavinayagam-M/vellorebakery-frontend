@@ -28,6 +28,32 @@ export const userService = {
             throw error;
         }
     },
+    register: async (name, email, password) => {
+        try {
+            const response = await fetch(`${API_URL}/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, password })
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.message || 'Registration failed');
+            }
+
+            const data = await response.json();
+
+            // Save token
+            if (data.token) {
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('user', JSON.stringify(data));
+            }
+
+            return data;
+        } catch (error) {
+            throw error;
+        }
+    },
 
     updateProfile: async (userId, updates) => {
         // ... (Keep existing or update if backend has profile update)

@@ -13,6 +13,18 @@ export const loginUser = createAsyncThunk(
     }
 );
 
+export const registerUser = createAsyncThunk(
+    'user/registerUser',
+    async ({ name, email, password }, { rejectWithValue }) => {
+        try {
+            const response = await userService.register(name, email, password);
+            return response;
+        } catch (error) {
+            return rejectWithValue(error.message);
+        }
+    }
+);
+
 export const updateUserProfile = createAsyncThunk(
     'user/updateUserProfile',
     async (updates) => {
@@ -28,7 +40,7 @@ const user = JSON.parse(localStorage.getItem('user'));
 
 const initialState = {
     currentUser: user || null,
-    isAuthenticated: !!token,
+    isAuthenticated: !!token && !!user, // Require both to avoid partial auth state crashes
     loading: false,
     error: null,
 };
@@ -61,6 +73,20 @@ const userSlice = createSlice({
                 state.currentUser = action.payload;
             })
             .addCase(loginUser.rejected, (state, action) => {
+                state.loading = false;
+                state.isAuthenticated = false;
+                state.error = action.payload;
+            })
+            .addCase(registerUser.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(registerUser.fulfilled, (state, action) => {
+                state.loading = false;
+                state.isAuthenticated = true;
+                state.currentUser = action.payload;
+            })
+            .addCase(registerUser.rejected, (state, action) => {
                 state.loading = false;
                 state.isAuthenticated = false;
                 state.error = action.payload;

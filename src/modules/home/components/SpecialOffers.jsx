@@ -1,7 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import Button from '../../../shared/components/Button';
-import festivalGiftHamperImg from '../../../assets/images/curatedbakerycombos/festivalgifthamper.png';
+import { COMBO_IMAGES } from '../../../assets/images';
+const festivalGiftHamperImg = COMBO_IMAGES.festivalGift;
 import { Link } from 'react-router-dom';
 
 const SpecialOffers = () => {

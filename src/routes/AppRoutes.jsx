@@ -13,10 +13,10 @@ import SnacksPage from '../modules/snacks/SnacksPage';
 import BakeryPage from '../modules/bakery/BakeryPage';
 import GiftingPage from '../modules/gifting/GiftingPage';
 import ProductDetails from '../modules/productDetails/ProductDetails';
-import SpecialOffersPage from '../modules/offers/SpecialOffersPage';
 import Cart from '../modules/cart/Cart';
 import Checkout from '../modules/checkout/Checkout';
 import OrderSuccess from '../modules/order/OrderSuccess';
+import TrackOrderPage from '../modules/order/TrackOrderPage';
 import Login from '../modules/user/Login';
 import Profile from '../modules/user/Profile';
 
@@ -42,11 +42,11 @@ const AppRoutes = () => {
                 <Route path="/snacks" element={<SnacksPage />} />
                 <Route path="/bakery" element={<BakeryPage />} />
                 <Route path="/gifting" element={<GiftingPage />} />
-                <Route path="/special-offers" element={<SpecialOffersPage />} />
                 <Route path="/products/:id" element={<ProductDetails />} />
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/checkout" element={<Checkout />} />
                 <Route path="/order-success" element={<OrderSuccess />} />
+                <Route path="/track-order" element={<TrackOrderPage />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/profile" element={<Profile />} />
             </Route>

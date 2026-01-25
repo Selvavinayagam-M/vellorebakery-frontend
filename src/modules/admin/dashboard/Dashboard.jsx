@@ -51,8 +51,8 @@ const Dashboard = () => {
                     color="text-green-600"
                 />
                 <StatCard
-                    title="Pending"
-                    value={stats.pendingOrders}
+                    title="Pending Orders"
+                    value={stats.activeOrders || stats.pendingOrders} // Use active or pending depending on backend response
                     icon={Clock}
                     trend="down"
                     trendValue="-2%"

@@ -4,9 +4,11 @@ import { Link } from 'react-router-dom';
 import { ChevronRight, ChevronLeft } from 'lucide-react';
 import Button from '../../../shared/components/Button';
 
-import heroImg1 from '../../../assets/images/hero-images/heroimg-The Warmth of Grandma’s Kitchen.png';
-import heroImg2 from '../../../assets/images/hero-images/heroimg-Melt-in-Mouth Mysore Pak.png';
-import heroImg3 from '../../../assets/images/hero-images/heroimg-Freshly Baked Every Hour.png';
+import { HERO_IMAGES } from '../../../assets/images';
+
+const heroImg1 = HERO_IMAGES.grandmasKitchen;
+const heroImg2 = HERO_IMAGES.mysore;
+const heroImg3 = HERO_IMAGES.bakery;
 
 // Premium Food Imagery - 3 Slides
 const SLIDES = [
@@ -88,7 +90,7 @@ const HeroSection = () => {
                     {/* Badge */}
                     <div className="inline-block mb-4 md:mb-6">
                         <span className="bg-brand-turmeric/90 text-brand-mahogany font-bold tracking-[0.2em] text-[10px] md:text-xs py-1.5 px-4 rounded-full uppercase shadow-lg backdrop-blur-sm border border-brand-turmeric/50">
-                            Since 1995 • Pure Ghee Tradition
+                            A Legacy of Taste & Purity
                         </span>
                     </div>
 
@@ -110,7 +112,7 @@ const HeroSection = () => {
                             </Button>
                         </Link>
                         <Link to="/products?category=bakery">
-                            <Button variant="outline" size="lg" className="min-w-[200px] text-base md:text-lg border-white text-white hover:bg-white hover:text-brand-mahogany py-4">
+                            <Button variant="outline" size="lg" className="min-w-[200px] text-base md:text-lg border-white text-white hover:bg-transparent hover:text-brand-turmeric hover:border-brand-turmeric py-4">
                                 View Bakery Menu
                             </Button>
                         </Link>
@@ -133,19 +135,7 @@ const HeroSection = () => {
                 ))}
             </div>
 
-            {/* Navigation Arrows (Visible on Desktop Hover) */}
-            <button
-                onClick={prevSlide}
-                className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/10 backdrop-blur-md text-white border border-white/20 hover:bg-brand-turmeric hover:text-brand-mahogany transition-all opacity-0 group-hover:opacity-100 hidden md:block"
-            >
-                <ChevronLeft size={24} />
-            </button>
-            <button
-                onClick={nextSlide}
-                className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/10 backdrop-blur-md text-white border border-white/20 hover:bg-brand-turmeric hover:text-brand-mahogany transition-all opacity-0 group-hover:opacity-100 hidden md:block"
-            >
-                <ChevronRight size={24} />
-            </button>
+            {/* Navigation Arrows Removed */}
         </section>
     );
 };

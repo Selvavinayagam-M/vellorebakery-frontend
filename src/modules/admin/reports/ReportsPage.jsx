@@ -6,7 +6,7 @@ import { fetchReports } from '../../../store/adminReportsSlice';
 const ReportsPage = () => {
     const dispatch = useDispatch();
     const reports = useSelector((state) => state.adminReports) || {};
-    const { dailySales = [], monthlyRevenue = 0, totalOrders = 0, topProducts = [] } = reports;
+    const { dailySales = [], monthlyRevenue = 0, totalOrders = 0, topProducts = [], totalCustomers = 0 } = reports;
 
     useEffect(() => {
         dispatch(fetchReports());
@@ -58,13 +58,24 @@ const ReportsPage = () => {
 
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                     <div className="flex items-center justify-between mb-4">
+                        <div className="p-3 rounded-lg bg-orange-50 text-orange-600">
+                            <DollarSign size={24} />
+                        </div>
+                        <span className="text-xs font-medium text-orange-600 bg-orange-50 px-2 py-1 rounded-full">Pending</span>
+                    </div>
+                    <p className="text-gray-500 text-sm">Pending COD</p>
+                    <h3 className="text-2xl font-bold text-gray-900 mt-1">₹{reports.pendingCOD ? reports.pendingCOD.toLocaleString() : '0'}</h3>
+                </div>
+
+                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                    <div className="flex items-center justify-between mb-4">
                         <div className="p-3 rounded-lg bg-purple-50 text-purple-600">
                             <Users size={24} />
                         </div>
                         <span className="text-xs font-medium text-purple-600 bg-purple-50 px-2 py-1 rounded-full">+4.1%</span>
                     </div>
-                    <p className="text-gray-500 text-sm">New Customers</p>
-                    <h3 className="text-2xl font-bold text-gray-900 mt-1">128</h3>
+                    <p className="text-gray-500 text-sm">Total Customers</p>
+                    <h3 className="text-2xl font-bold text-gray-900 mt-1">{totalCustomers}</h3>
                 </div>
             </div>
 

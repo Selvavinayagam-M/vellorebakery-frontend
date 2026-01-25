@@ -3,18 +3,25 @@ import { useSelector, useDispatch } from 'react-redux';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ShoppingBag, Trash2, Plus, Minus, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { toggleCart } from '../../store/uiSlice';
+import { closeCart } from '../../store/uiSlice';
 import { removeFromCart, updateQuantity } from '../../store/cartSlice';
 import Button from './Button';
 
 const CartSidebar = () => {
     const { isCartOpen } = useSelector((state) => state.ui);
-    const { items, totalAmount } = useSelector((state) => state.cart);
+    const { items, totalAmount, totalItems } = useSelector((state) => state.cart); // removed deliveryCharge from cart slice
+    const settings = useSelector((state) => state.settings);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    // Calculate Delivery (Dynamic)
+    const deliveryCharge = settings.enableDelivery ? settings.deliveryCharge : 0;
+    const freeDeliveryThreshold = settings.freeDeliveryThreshold || 1000;
+    const isFreeDelivery = totalAmount > freeDeliveryThreshold;
+    const finalAmount = totalAmount + (isFreeDelivery ? 0 : deliveryCharge);
+
     const handleClose = () => {
-        dispatch(toggleCart());
+        dispatch(closeCart());
     };
 
     const handleCheckout = () => {
@@ -105,9 +112,25 @@ const CartSidebar = () => {
                         {/* Footer */}
                         {items.length > 0 && (
                             <div className="p-5 border-t border-gray-100 bg-white">
-                                <div className="flex justify-between items-center mb-4">
+                                {/* Free Delivery Progress */}
+                                {settings.enableDelivery && totalAmount < freeDeliveryThreshold && (
+                                    <div className="bg-brand-turmeric/10 p-3 rounded-lg mb-4 border border-brand-turmeric/20">
+                                        <p className="text-xs text-brand-mahogany font-bold text-center">
+                                            Add ₹{freeDeliveryThreshold - totalAmount} more for FREE Delivery! 🚚
+                                        </p>
+                                    </div>
+                                )}
+                                <div className="flex justify-between items-center mb-2">
                                     <span className="text-gray-600">Subtotal</span>
-                                    <span className="text-2xl font-bold text-brand-maroon">₹{totalAmount}</span>
+                                    <span className="text-lg font-bold text-gray-800">₹{totalAmount}</span>
+                                </div>
+                                <div className="flex justify-between text-gray-600 mb-4">
+                                    <span>Delivery</span>
+                                    <span className="text-green-600 font-medium">{isFreeDelivery ? 'FREE' : `₹${deliveryCharge}`}</span>
+                                </div>
+                                <div className="flex justify-between items-center mb-4">
+                                    <span className="text-gray-600">Total</span>
+                                    <span className="text-2xl font-bold text-brand-maroon">₹{finalAmount}</span>
                                 </div>
                                 <p className="text-xs text-gray-400 mb-4 text-center">Shipping & taxes calculated at checkout</p>
                                 <div className="grid grid-cols-2 gap-3">

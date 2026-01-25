@@ -21,5 +21,25 @@ export const ordersService = {
         } catch (error) {
             throw error;
         }
+    },
+
+    trackOrder: async (orderId) => {
+        try {
+            const response = await fetch(`${API_URL}/track/${orderId}`);
+            const contentType = response.headers.get("content-type");
+
+            if (!response.ok) {
+                if (contentType && contentType.indexOf("application/json") !== -1) {
+                    const error = await response.json();
+                    throw new Error(error.message || 'Failed to track order');
+                } else {
+                    throw new Error(`Order not found or API unavailable (Status: ${response.status})`);
+                }
+            }
+
+            return await response.json();
+        } catch (error) {
+            throw error;
+        }
     }
 };

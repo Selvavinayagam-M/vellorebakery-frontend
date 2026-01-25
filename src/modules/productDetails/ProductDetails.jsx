@@ -8,7 +8,8 @@ import { addToCart } from '../../store/cartSlice';
 import { showToast } from '../../store/uiSlice';
 import { fetchProductById, clearProductDetails } from '../../store/productDetailsSlice';
 import CloudinaryImage from '../../shared/components/CloudinaryImage';
-import fallbackImage from '../../assets/images/curatedbakerycombos/familyteatime.png';
+import { COMBO_IMAGES } from '../../assets/images';
+const fallbackImage = COMBO_IMAGES.familyTeaTime;
 
 const ProductDetails = () => {
     const { id } = useParams();

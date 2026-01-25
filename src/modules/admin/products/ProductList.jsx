@@ -4,7 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { Edit2, Trash2, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import { toggleActive, deleteProduct, fetchProducts } from '../../../store/adminProductsSlice';
 import { AdminPageHeader, AdminSearchFilter } from '../shared/AdminComponents';
-import fallbackImage from '../../../assets/images/curatedbakerycombos/familyteatime.png';
+import { COMBO_IMAGES } from '../../../assets/images';
+const fallbackImage = COMBO_IMAGES.familyTeaTime;
 
 const ProductList = () => {
     const dispatch = useDispatch();
@@ -91,9 +92,9 @@ const ProductList = () => {
                                         <td className="px-6 py-4 text-center whitespace-nowrap">
                                             <button
                                                 onClick={() => dispatch(toggleActive(item.id || item._id))}
-                                                className={`p-1.5 rounded-md transition-colors ${!item.isArchived ? 'text-green-600 bg-green-50 hover:bg-green-100' : 'text-gray-400 bg-gray-100 hover:bg-gray-200'}`}
+                                                className={`p-1.5 rounded-md transition-colors ${item.isActive ? 'text-green-600 bg-green-50 hover:bg-green-100' : 'text-gray-400 bg-gray-100 hover:bg-gray-200'}`}
                                             >
-                                                {!item.isArchived ? <Eye size={16} /> : <EyeOff size={16} />}
+                                                {item.isActive ? <Eye size={16} /> : <EyeOff size={16} />}
                                             </button>
                                         </td>
                                         <td className="px-6 py-4 text-right whitespace-nowrap">

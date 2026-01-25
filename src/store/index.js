@@ -17,7 +17,7 @@ import adminOrdersReducer from './adminOrdersSlice';
 import adminCustomersReducer from './adminCustomersSlice';
 import adminInventoryReducer from './adminInventorySlice';
 import adminReportsReducer from './adminReportsSlice';
-import adminSettingsReducer from './adminSettingsSlice';
+import settingsReducer from './settingsSlice';
 
 export const store = configureStore({
     reducer: {
@@ -38,8 +38,7 @@ export const store = configureStore({
         adminOrders: adminOrdersReducer,
         adminCustomers: adminCustomersReducer,
         adminInventory: adminInventoryReducer,
-        adminReports: adminReportsReducer,
-        adminSettings: adminSettingsReducer,
+        settings: settingsReducer,
     },
 });
 

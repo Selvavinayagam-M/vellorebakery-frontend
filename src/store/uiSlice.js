@@ -27,6 +27,12 @@ const uiSlice = createSlice({
         toggleCart: (state) => {
             state.isCartOpen = !state.isCartOpen;
         },
+        openCart: (state) => {
+            state.isCartOpen = true;
+        },
+        closeCart: (state) => {
+            state.isCartOpen = false;
+        },
         toggleFilter: (state) => {
             state.isFilterOpen = !state.isFilterOpen;
         },
@@ -61,6 +67,8 @@ const uiSlice = createSlice({
 export const {
     setLoading,
     toggleCart,
+    openCart,
+    closeCart,
     toggleFilter,
     toggleMobileMenu,
     openModal,

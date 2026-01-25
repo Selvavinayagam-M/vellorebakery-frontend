@@ -1,11 +1,16 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../../../store/cartSlice';
+import { showToast, openCart } from '../../../store/uiSlice';
 import { Coffee, Gift, PartyPopper, ChevronRight } from 'lucide-react';
 import Button from '../../../shared/components/Button';
 
-import familyTeaTimeImg from '../../../assets/images/curatedbakerycombos/familyteatime.png';
-import festivalGiftHamperImg from '../../../assets/images/curatedbakerycombos/festivalgifthamper.png';
-import kidsPartyPackImg from '../../../assets/images/curatedbakerycombos/kidspartypack.png';
+import { COMBO_IMAGES } from '../../../assets/images';
+
+const familyTeaTimeImg = COMBO_IMAGES.familyTeaTime;
+const festivalGiftHamperImg = COMBO_IMAGES.festivalGift;
+const kidsPartyPackImg = COMBO_IMAGES.kidsParty;
 
 const combos = [
     {
@@ -44,6 +49,21 @@ const combos = [
 ];
 
 const BakeryCombos = () => {
+    const dispatch = useDispatch();
+
+    const handleAddToCart = (combo) => {
+        dispatch(addToCart({
+            id: `combo-${combo.id}`,
+            name: combo.title,
+            price: combo.price,
+            image: combo.image,
+            quantity: 1,
+            isCombo: true
+        }));
+        dispatch(showToast({ message: `Added ${combo.title} to cart` }));
+        dispatch(openCart());
+    };
+
     return (
         <section className="py-20 bg-white">
             <div className="container mx-auto px-4">
@@ -85,7 +105,10 @@ const BakeryCombos = () => {
                                         <span className="block text-gray-400 text-sm line-through">₹{combo.originalPrice}</span>
                                         <span className="block text-2xl font-bold text-brand-jaggery">₹{combo.price}</span>
                                     </div>
-                                    <button className={`${combo.btnColor} px-6 py-2 rounded-full font-bold text-white shadow-md transition-shadow hover:shadow-lg flex items-center gap-1 text-sm`}>
+                                    <button
+                                        onClick={() => handleAddToCart(combo)}
+                                        className={`${combo.btnColor} px-6 py-2 rounded-full font-bold text-white shadow-md transition-shadow hover:shadow-lg flex items-center gap-1 text-sm`}
+                                    >
                                         Add <ChevronRight size={16} />
                                     </button>
                                 </div>

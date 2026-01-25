@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { ShoppingCart, LogOut, User, Menu, X, ChevronDown, MapPin, Phone, Instagram, Facebook, Search, Heart } from 'lucide-react';
+import { ShoppingCart, ShoppingBag, LogOut, User, Menu, X, ChevronDown, MapPin, Phone, Instagram, Facebook, Search, Heart } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toggleCart } from '../store/uiSlice';
+import { logout } from '../store/userSlice';
 import MegaMenu from '../shared/components/MegaMenu';
-import logoImg from '../assets/images/logo/vellore-sweets-logo.png';
+import { LOGO_IMAGES } from '../assets/images';
+const logoImg = LOGO_IMAGES.main;
 
 const Header = () => {
     const [isScrolled, setIsScrolled] = useState(false);
@@ -13,9 +15,11 @@ const Header = () => {
     const [activeMegaMenu, setActiveMegaMenu] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [showMobileSearch, setShowMobileSearch] = useState(false);
+    const [userMenuOpen, setUserMenuOpen] = useState(false);
 
     const { totalItems } = useSelector((state) => state.cart);
-    const { userInfo } = useSelector((state) => state.user);
+    const { currentUser } = useSelector((state) => state.user);
+    const settings = useSelector((state) => state.settings);
     const dispatch = useDispatch();
     const location = useLocation();
     const navigate = useNavigate();
@@ -25,7 +29,13 @@ const Header = () => {
         setMobileMenuOpen(false);
         setActiveMegaMenu(null);
         setShowMobileSearch(false);
+        setUserMenuOpen(false);
     }, [location]);
+
+    const handleLogout = () => {
+        dispatch(logout());
+        navigate('/login');
+    };
 
     // Scroll handler
     useEffect(() => {
@@ -60,8 +70,8 @@ const Header = () => {
         ? "bg-white/95 backdrop-blur-md shadow-md py-2"
         : "bg-gradient-to-b from-black/80 to-transparent py-4";
 
-    const textColorClass = useSolidHeader ? "text-brand-mahogany" : "text-white";
-    const topBarClass = useSolidHeader ? "bg-brand-mahogany text-brand-turmeric" : "bg-transparent text-brand-turmeric/90 border-b border-white/10";
+    const textColorClass = useSolidHeader ? "text-brand-turmeric" : "text-white";
+    const topBarClass = useSolidHeader ? "bg-brand-mahogany text-brand-turmeric" : "bg-transparent text-brand-turmeric/90";
     const navLinkClass = useSolidHeader
         ? "text-gray-600 hover:text-brand-mahogany hover:border-brand-turmeric"
         : "text-white/90 hover:text-white hover:border-brand-turmeric";
@@ -71,34 +81,40 @@ const Header = () => {
 
     // Logo Filter/Class
     const logoClass = useSolidHeader
-        ? "h-14"
-        : "h-20 drop-shadow-lg";
+        ? "h-28"
+        : "h-40 drop-shadow-lg";
 
     const searchIconClass = useSolidHeader ? "text-gray-400" : "text-white/70";
     const searchInputClass = useSolidHeader
         ? "bg-gray-100 border-transparent text-gray-800 focus:bg-white focus:ring-1 focus:ring-brand-turmeric"
         : "bg-white/10 border-white/20 text-white placeholder-white/60 focus:bg-white/20 border";
 
+    const userIconClass = useSolidHeader
+        ? "bg-white text-brand-mahogany border-brand-turmeric" // Scrolled: White bg, Brown icon, Gold border
+        : "bg-white/10 text-white border-brand-turmeric"; // Default: Glass bg, White icon, Gold border
+
     return (
         <>
             {/* Header Fixed Wrapper */}
-            <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500`}>
+            <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled ? 'scrolled' : ''}`}>
                 {/* 1. TOP BAR (Utility Layer) */}
-                <div className={`hidden md:flex h-[40px] px-4 items-center justify-between text-xs font-medium transition-colors duration-500 ${topBarClass}`}>
-                    <div className="container mx-auto flex justify-between items-center h-full">
+                <div className={`hidden md:flex h-[40px] px-4 items-center text-xs font-medium transition-colors duration-500 relative z-[60] ${topBarClass}`}>
+                    <div className="container mx-auto flex items-center h-full relative">
                         {/* Left: Location/Contact */}
                         <div className="flex items-center space-x-6">
                             <span className="flex items-center gap-1.5 opacity-90 hover:opacity-100 cursor-default">
-                                <MapPin size={12} /> Vellore & Surroundings
+                                <MapPin size={12} /> {settings.city || 'Vellore'} & Surroundings
                             </span>
                             <span className="flex items-center gap-1.5 opacity-90 hover:opacity-100 cursor-default">
-                                <Phone size={12} /> +91 98765 43210
+                                <Phone size={12} /> {settings.contactPhone}
                             </span>
                         </div>
 
                         {/* Right: Actions */}
-                        <div className="flex items-center space-x-6">
-                            <Link to="/track-order" className="hover:opacity-100 transition-opacity opacity-90">Track Order</Link>
+                        <div className="flex items-center space-x-6 ml-auto relative z-[100]">
+                            <div className="relative z-[101] pointer-events-auto">
+                                <Link to="/track-order" className="hover:opacity-100 transition-opacity opacity-90 cursor-pointer font-bold block py-1">Track Order</Link>
+                            </div>
                             <span className="opacity-30">|</span>
                             <div className="flex items-center gap-4">
                                 <Link to="/profile?tab=favourites" className="flex items-center gap-1.5 hover:scale-105 transition-transform group">
@@ -106,15 +122,49 @@ const Header = () => {
                                     <span>Wishlist</span>
                                 </Link>
 
-                                {userInfo ? (
-                                    <Link to="/profile" className="flex items-center gap-1.5 hover:scale-105 transition-transform group">
-                                        <User size={14} />
-                                        <span className="truncate max-w-[100px]">{userInfo.name?.split(' ')[0] || 'Account'}</span>
-                                    </Link>
+                                {currentUser ? (
+                                    <div className="relative">
+                                        <button
+                                            onClick={() => setUserMenuOpen(!userMenuOpen)}
+                                            className="flex items-center gap-1.5 focus:outline-none hover:text-brand-mahogany transition-colors"
+                                        >
+                                            <div className={`w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-300 ${userIconClass}`}>
+                                                <User size={16} />
+                                            </div>
+                                            <span className={`text-sm font-bold ${textColorClass}`}>{currentUser?.name?.split(' ')[0]}</span>
+                                            <ChevronDown size={14} className={textColorClass} />
+                                        </button>
+
+                                        <AnimatePresence>
+                                            {userMenuOpen && (
+                                                <motion.div
+                                                    initial={{ opacity: 0, y: 10 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    exit={{ opacity: 0, y: 10 }}
+                                                    transition={{ duration: 0.2 }}
+                                                    className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 py-2 overflow-hidden"
+                                                >
+                                                    <div className="px-4 py-3 border-b border-gray-50 bg-gray-50/50">
+                                                        <p className="text-sm font-bold text-gray-800 truncate">{currentUser?.name}</p>
+                                                        <p className="text-xs text-gray-500 truncate">{currentUser?.email}</p>
+                                                    </div>
+                                                    <Link to="/profile" className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-brand-mahogany transition-colors">
+                                                        <User size={16} /> My Account
+                                                    </Link>
+                                                    <Link to="/profile?tab=orders" className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-brand-mahogany transition-colors">
+                                                        <ShoppingBag size={16} /> My Orders
+                                                    </Link>
+                                                    <div className="h-px bg-gray-100 my-1"></div>
+                                                    <button onClick={handleLogout} className="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors text-left">
+                                                        <LogOut size={16} /> Logout
+                                                    </button>
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
+                                    </div>
                                 ) : (
-                                    <Link to="/login" className="flex items-center gap-1.5 hover:scale-105 transition-transform group">
-                                        <LogOut size={14} className="rotate-180" />
-                                        <span>Login / Signup</span>
+                                    <Link to="/login" className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-current hover:bg-white/10 ${textColorClass}`}>
+                                        <span className="font-bold text-sm">Login</span>
                                     </Link>
                                 )}
                                 <button
@@ -138,10 +188,10 @@ const Header = () => {
 
                 {/* 2. MAIN HEADER (Sticky/Transparent) */}
                 <nav
-                    className={`w-full transition-all duration-500 border-b border-transparent ${headerClasses}`}
+                    className={`w-full transition-all duration-500 relative ${useSolidHeader ? 'border-b border-transparent' : 'border-none'} ${headerClasses}`}
                     onMouseLeave={() => setActiveMegaMenu(null)}
                 >
-                    <div className="container mx-auto px-4 flex items-center justify-between">
+                    <div className="container mx-auto px-4 flex items-start justify-between">
 
                         {/* LEFT: Logo & Mobile Toggle */}
                         <div className="flex items-center gap-4">
@@ -152,17 +202,20 @@ const Header = () => {
                                 <Menu size={24} />
                             </button>
 
-                            <Link to="/" className="flex flex-col justify-center">
-                                <img
-                                    src={logoImg}
-                                    alt="Vellore Sweets Logo"
-                                    className={`transition-all duration-500 object-contain ${logoClass}`}
-                                />
+                            <Link to="/" className="flex flex-col justify-center relative z-20">
+                                {/* Placeholder to reserve width but not height, allowing logo to hang */}
+                                <div className={`transition-all duration-500 relative h-10 ${useSolidHeader ? 'w-24' : 'w-36'}`}>
+                                    <img
+                                        src={logoImg}
+                                        alt="Vellore Sweets Logo"
+                                        className={`absolute top-0 left-0 max-w-none transition-all duration-500 object-contain ${logoClass}`}
+                                    />
+                                </div>
                             </Link>
                         </div>
 
                         {/* CENTER: Navigation (Desktop Only) */}
-                        <div className="hidden md:flex items-center space-x-1 h-full">
+                        <div className="hidden md:flex items-center space-x-1 pt-3 relative z-50">
                             <Link
                                 to="/"
                                 className={`px-4 py-2 text-sm font-bold uppercase tracking-wide rounded-full transition-all ${location.pathname === '/' ? (useSolidHeader ? 'text-brand-mahogany bg-brand-turmeric/10' : 'text-white bg-white/20 backdrop-blur-sm') : navLinkClass}`}
@@ -185,7 +238,7 @@ const Header = () => {
                         </div>
 
                         {/* RIGHT: Search (Desktop) & CTA */}
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-4 pt-3">
                             {/* Desktop Search */}
                             <div className="hidden md:flex w-56">
                                 <div className="relative group w-full">
@@ -202,12 +255,7 @@ const Header = () => {
                             </div>
 
                             {/* Order Now CTA */}
-                            <Link
-                                to="/products"
-                                className={`hidden md:flex px-6 py-2.5 rounded-full font-bold text-sm tracking-wide shadow-lg transform hover:-translate-y-0.5 transition-all ${ctaClass}`}
-                            >
-                                Order Fresh
-                            </Link>
+
 
                             {/* Mobile Icons */}
                             <div className={`flex md:hidden items-center gap-3 ${textColorClass}`}>
@@ -306,7 +354,6 @@ const Header = () => {
                                         <ChevronDown size={14} className="-rotate-90 text-gray-300 group-hover:text-brand-turmeric transition-colors" />
                                     </Link>
                                 ))}
-                                <Link to="/products?category=offers" onClick={() => setMobileMenuOpen(false)} className="block px-6 py-3 text-sm font-bold text-red-600 hover:bg-red-50 mt-2">Special Offers 🔥</Link>
 
                                 <div className="mt-6 border-t border-gray-100 pt-6">
                                     <Link to="/track-order" className="block px-6 py-3 text-sm text-gray-600 hover:text-brand-mahogany">Track Order</Link>
@@ -316,16 +363,21 @@ const Header = () => {
 
                             {/* Mobile Bottom User Info */}
                             <div className="p-4 bg-gray-50 border-t border-gray-100">
-                                {userInfo ? (
-                                    <Link to="/profile" className="flex items-center gap-3 p-2 rounded-lg hover:bg-white hover:shadow-sm transition-all" onClick={() => setMobileMenuOpen(false)}>
-                                        <div className="w-10 h-10 rounded-full bg-brand-turmeric text-brand-mahogany flex items-center justify-center font-bold">
-                                            {userInfo.name?.charAt(0) || 'U'}
-                                        </div>
-                                        <div>
-                                            <p className="text-sm font-bold text-gray-800">{userInfo.name || 'My Account'}</p>
-                                            <p className="text-xs text-gray-500">View orders & profile</p>
-                                        </div>
-                                    </Link>
+                                {currentUser ? (
+                                    <div className="space-y-3">
+                                        <Link to="/profile" className="flex items-center gap-3 p-2 rounded-lg hover:bg-white hover:shadow-sm transition-all" onClick={() => setMobileMenuOpen(false)}>
+                                            <div className="w-10 h-10 rounded-full bg-brand-turmeric text-brand-mahogany flex items-center justify-center font-bold">
+                                                {currentUser?.name?.charAt(0) || 'U'}
+                                            </div>
+                                            <div>
+                                                <p className="text-sm font-bold text-gray-800">{currentUser?.name || 'My Account'}</p>
+                                                <p className="text-xs text-gray-500">View orders & profile</p>
+                                            </div>
+                                        </Link>
+                                        <button onClick={() => { handleLogout(); setMobileMenuOpen(false); }} className="w-full py-2 bg-white border border-gray-200 text-red-600 rounded-lg text-sm font-bold shadow-sm">
+                                            Logout
+                                        </button>
+                                    </div>
                                 ) : (
                                     <Link to="/login" className="flex items-center gap-3 p-2 rounded-lg hover:bg-white hover:shadow-sm transition-all" onClick={() => setMobileMenuOpen(false)}>
                                         <div className="w-10 h-10 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center">

@@ -1,7 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import heroImg1 from '../assets/images/hero-images/heroimg-The Warmth of Grandma’s Kitchen.png';
-import heroImg2 from '../assets/images/hero-images/heroimg-Melt-in-Mouth Mysore Pak.png';
+import { HERO_IMAGES } from '../assets/images';
+
+const heroImg1 = HERO_IMAGES.grandmasKitchen;
+const heroImg2 = HERO_IMAGES.mysore;
 
 const initialState = {
     heroSlides: [

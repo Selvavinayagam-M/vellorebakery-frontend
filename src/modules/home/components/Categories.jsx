@@ -2,12 +2,13 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowUpRight } from 'lucide-react';
+import { COLLECTION_IMAGES, LOGO_IMAGES } from '../../../assets/images';
 
-import royalSweetsImg from '../../../assets/images/ourcollections/Royal Sweets.png';
-import savorySnacksImg from '../../../assets/images/ourcollections/Savory Snacks.png';
-import bakeryFreshImg from '../../../assets/images/ourcollections/Bakery Treats.png';
-import giftHampersImg from '../../../assets/images/ourcollections/Gift Hampers Banner Image.png';
-import logoImg from '../../../assets/images/logo/vellore-sweets-logo.png';
+const royalSweetsImg = COLLECTION_IMAGES.sweets;
+const savorySnacksImg = COLLECTION_IMAGES.snacks;
+const bakeryFreshImg = COLLECTION_IMAGES.bakery;
+const giftHampersImg = COLLECTION_IMAGES.gifting;
+const logoImg = LOGO_IMAGES.main;
 
 const COLLECTIONS = [
     {

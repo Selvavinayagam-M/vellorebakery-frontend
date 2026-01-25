@@ -4,7 +4,7 @@ import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import Button from '../../shared/components/Button';
 import Input from '../../shared/components/Input';
-import { loginUser } from '../../store/userSlice';
+import { loginUser, registerUser } from '../../store/userSlice';
 import { showToast } from '../../store/uiSlice';
 
 const Login = () => {
@@ -17,29 +17,33 @@ const Login = () => {
     const location = useLocation();
 
     const { items } = useSelector((state) => state.cart);
-    const { userInfo, loading, error } = useSelector((state) => state.user);
+    const { currentUser, loading, error } = useSelector((state) => state.user);
 
     // Redirect if already logged in
     useEffect(() => {
-        if (userInfo) {
-            if (userInfo.role === 'admin') {
+        if (currentUser) {
+            if (currentUser.role === 'admin') {
                 navigate('/admin/dashboard');
             } else {
-                navigate('/profile');
+                navigate('/');
             }
         }
-    }, [userInfo, navigate]);
+    }, [currentUser, navigate]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        dispatch(loginUser({ email, password: password || 'password123' }))
+        const action = isLogin
+            ? loginUser({ email, password: password || 'password123' })
+            : registerUser({ name, email, password });
+
+        dispatch(action)
             .unwrap()
             .then((userInfo) => {
-                dispatch(showToast({ message: `Welcome back, ${userInfo.name}!` }));
+                dispatch(showToast({ message: isLogin ? `Welcome back, ${userInfo.name}!` : `Welcome to Vellore Sweets, ${userInfo.name}!` }));
 
                 // Smart Redirection Logic
-                let destination = '/profile'; // Default
+                let destination = '/'; // Default
 
                 if (userInfo.role === 'admin') {
                     destination = '/admin/dashboard';
@@ -53,7 +57,7 @@ const Login = () => {
                 navigate(destination, { replace: true });
             })
             .catch((err) => {
-                dispatch(showToast({ message: err || 'Login failed', type: 'error' }));
+                dispatch(showToast({ message: err || (isLogin ? 'Login failed' : 'Registration failed'), type: 'error' }));
             });
     };
 
@@ -139,7 +143,7 @@ const Login = () => {
                             {loading ? (
                                 <span className="flex items-center justify-center gap-2">
                                     <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                                    Logging in...
+                                    {isLogin ? 'Logging in...' : 'Creating Account...'}
                                 </span>
                             ) : (
                                 isLogin ? 'Login' : 'Create Account'

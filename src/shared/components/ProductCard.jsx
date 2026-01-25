@@ -4,11 +4,13 @@ import { motion } from 'framer-motion';
 import { Star, ShoppingBag, Heart, Eye, Clock } from 'lucide-react';
 import { addToCart } from '../../store/cartSlice';
 import { toggleFavourite } from '../../store/favouritesSlice';
-import { showToast } from '../../store/uiSlice';
+import { showToast, openCart } from '../../store/uiSlice';
 import { Link } from 'react-router-dom';
 import CloudinaryImage from './CloudinaryImage';
-import fallbackImage from '../../assets/images/curatedbakerycombos/familyteatime.png';
-import logoImg from '../../assets/images/logo/vellore-sweets-logo.png';
+import { COMBO_IMAGES } from '../../assets/images';
+const fallbackImage = COMBO_IMAGES.familyTeaTime;
+import { LOGO_IMAGES } from '../../assets/images';
+const logoImg = LOGO_IMAGES.main;
 
 const ProductCard = ({ product }) => {
     const dispatch = useDispatch();
@@ -28,6 +30,7 @@ const ProductCard = ({ product }) => {
         e.stopPropagation();
         dispatch(addToCart({ ...product, id: productId, quantity: 1 }));
         dispatch(showToast({ message: `Added ${product.name} to cart` }));
+        dispatch(openCart());
     };
 
     const handleToggleFavourite = (e) => {
@@ -77,7 +80,7 @@ const ProductCard = ({ product }) => {
 
                 {/* Badges */}
                 <div className="absolute top-3 left-3 flex flex-col gap-2 z-10 pointer-events-none">
-                    {product.isFresh && (
+                    {product.flags?.isFresh && (
                         <span className="bg-white/90 backdrop-blur-sm text-brand-mahogany text-xs font-bold px-3 py-1 rounded-full shadow-sm flex items-center gap-1">
                             <Clock size={12} className="text-green-600" /> Fresh Today
                         </span>
