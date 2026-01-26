@@ -3,9 +3,9 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { ShoppingCart, ShoppingBag, LogOut, User, Menu, X, ChevronDown, MapPin, Phone, Instagram, Facebook, Search, Heart } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { toggleCart } from '../store/uiSlice';
-import { logout } from '../store/userSlice';
-import MegaMenu from '../shared/components/MegaMenu';
+import { toggleCart } from '../features/ui/uiSlice';
+import { logout } from '../features/auth/userSlice';
+import MegaMenu from '../components/MegaMenu';
 import { LOGO_IMAGES } from '../assets/images';
 const logoImg = LOGO_IMAGES.main;
 
@@ -148,12 +148,22 @@ const Header = () => {
                                                         <p className="text-sm font-bold text-gray-800 truncate">{currentUser?.name}</p>
                                                         <p className="text-xs text-gray-500 truncate">{currentUser?.email}</p>
                                                     </div>
-                                                    <Link to="/profile" className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-brand-mahogany transition-colors">
-                                                        <User size={16} /> My Account
-                                                    </Link>
-                                                    <Link to="/profile?tab=orders" className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-brand-mahogany transition-colors">
-                                                        <ShoppingBag size={16} /> My Orders
-                                                    </Link>
+
+                                                    {['admin', 'superadmin'].includes(currentUser?.role) ? (
+                                                        <Link to="/admin/dashboard" className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-brand-mahogany transition-colors">
+                                                            <User size={16} /> Dashboard
+                                                        </Link>
+                                                    ) : (
+                                                        <>
+                                                            <Link to="/profile" className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-brand-mahogany transition-colors">
+                                                                <User size={16} /> My Account
+                                                            </Link>
+                                                            <Link to="/profile?tab=orders" className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-brand-mahogany transition-colors">
+                                                                <ShoppingBag size={16} /> My Orders
+                                                            </Link>
+                                                        </>
+                                                    )}
+
                                                     <div className="h-px bg-gray-100 my-1"></div>
                                                     <button onClick={handleLogout} className="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors text-left">
                                                         <LogOut size={16} /> Logout
@@ -191,24 +201,35 @@ const Header = () => {
                     className={`w-full transition-all duration-500 relative ${useSolidHeader ? 'border-b border-transparent' : 'border-none'} ${headerClasses}`}
                     onMouseLeave={() => setActiveMegaMenu(null)}
                 >
-                    <div className="container mx-auto px-4 flex items-start justify-between">
+                    {/* 
+                        Mobile: Grid Layout (3 columns) for perfect center alignment 
+                        Desktop: Flex Layout for standard row
+                    */}
+                    <div className="container mx-auto px-4 grid grid-cols-3 items-center md:flex md:items-start md:justify-between">
 
-                        {/* LEFT: Logo & Mobile Toggle */}
-                        <div className="flex items-center gap-4">
+                        {/* Mobile Menu Button - Column 1 (Left) */}
+                        <div className="md:hidden justify-self-start">
                             <button
-                                className={`md:hidden p-1 ${textColorClass}`}
+                                className={`p-1 ${textColorClass}`}
                                 onClick={() => setMobileMenuOpen(true)}
                             >
                                 <Menu size={24} />
                             </button>
+                        </div>
 
+                        {/* Logo - Column 2 (Center on Mobile, Left on Desktop) */}
+                        <div className="justify-self-center md:justify-self-start">
                             <Link to="/" className="flex flex-col justify-center relative z-20">
-                                {/* Placeholder to reserve width but not height, allowing logo to hang */}
-                                <div className={`transition-all duration-500 relative h-10 ${useSolidHeader ? 'w-24' : 'w-36'}`}>
+                                {/* 
+                                    Logo Container Sizing:
+                                    Mobile: h-12 to h-16 (smaller to fit)
+                                    Desktop: h-10 (existing placeholder logic preserved or adjusted if needed, utilizing absolute positioning)
+                                */}
+                                <div className={`transition-all duration-500 relative ${useSolidHeader ? 'w-16 md:w-24 h-12 md:h-10' : 'w-24 md:w-36 h-16 md:h-10'}`}>
                                     <img
                                         src={logoImg}
                                         alt="Vellore Sweets Logo"
-                                        className={`absolute top-0 left-0 max-w-none transition-all duration-500 object-contain ${logoClass}`}
+                                        className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 md:top-0 md:left-0 md:translate-x-0 md:translate-y-0 max-w-none transition-all duration-500 object-contain ${useSolidHeader ? 'h-16 md:h-28' : 'h-20 md:h-40 drop-shadow-lg'}`}
                                     />
                                 </div>
                             </Link>
@@ -237,8 +258,8 @@ const Header = () => {
                             })}
                         </div>
 
-                        {/* RIGHT: Search (Desktop) & CTA */}
-                        <div className="flex items-center gap-4 pt-3">
+                        {/* RIGHT: Search (Desktop) & CTA / Mobile Icons - Column 3 (Right) */}
+                        <div className="justify-self-end flex items-center gap-4 md:pt-3">
                             {/* Desktop Search */}
                             <div className="hidden md:flex w-56">
                                 <div className="relative group w-full">
@@ -253,9 +274,6 @@ const Header = () => {
                                     />
                                 </div>
                             </div>
-
-                            {/* Order Now CTA */}
-
 
                             {/* Mobile Icons */}
                             <div className={`flex md:hidden items-center gap-3 ${textColorClass}`}>
@@ -328,12 +346,11 @@ const Header = () => {
                             className="fixed inset-y-0 left-0 w-[85%] max-w-sm bg-white z-50 md:hidden flex flex-col shadow-2xl"
                         >
                             {/* Mobile Menu Header */}
-                            <div className="p-5 flex justify-between items-center border-b border-gray-100 bg-brand-mahogany text-white">
+                            <div className="p-5 flex justify-between items-center border-b border-gray-100 bg-brand-mahogany text-brand-turmeric">
                                 <div>
-                                    <h2 className="font-serif font-bold text-xl">Vellore Sweets</h2>
-                                    <p className="text-[10px] text-brand-turmeric uppercase tracking-widest mt-0.5">EST. 1995</p>
+                                    <h2 className="font-serif font-bold text-xl tracking-wide text-brand-turmeric">Explore</h2>
                                 </div>
-                                <button onClick={() => setMobileMenuOpen(false)} className="text-white/80 hover:text-white">
+                                <button onClick={() => setMobileMenuOpen(false)} className="text-brand-turmeric/80 hover:text-brand-turmeric">
                                     <X size={24} />
                                 </button>
                             </div>
@@ -403,3 +420,4 @@ const Header = () => {
 };
 
 export default Header;
+

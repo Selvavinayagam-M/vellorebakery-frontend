@@ -2,8 +2,8 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
-import CartSidebar from '../shared/components/CartSidebar';
-import Toast from '../shared/components/Toast';
+import CartSidebar from '../components/CartSidebar';
+import Toast from '../components/Toast';
 
 const MainLayout = () => {
     return (
@@ -20,3 +20,4 @@ const MainLayout = () => {
 };
 
 export default MainLayout;
+

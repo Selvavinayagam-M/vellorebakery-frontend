@@ -56,3 +56,4 @@ export const COMBO_IMAGES = {
 export const LOGO_IMAGES = {
     main: brandLogo
 };
+

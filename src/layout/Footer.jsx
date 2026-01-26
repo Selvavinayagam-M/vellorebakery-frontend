@@ -12,11 +12,11 @@ const Footer = () => {
     return (
         <footer className="bg-brand-black text-brand-cream pt-16 pb-8">
             <div className="container mx-auto px-4">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-12 mb-12">
                     {/* Brand */}
-                    <div className="space-y-4">
+                    <div className="space-y-4 text-center md:text-left">
                         <Link to="/" className="text-3xl font-serif font-bold text-white tracking-tight inline-block">
-                            <img src={logoImg} alt="Vellore Sweets" className="h-48 w-auto object-contain" />
+                            <img src={logoImg} alt="Vellore Sweets" className="h-32 md:h-48 w-auto object-contain" />
                         </Link>
 
                     </div>
@@ -59,7 +59,7 @@ const Footer = () => {
                                 <span>{settings.contactEmail}</span>
                             </li>
                         </ul>
-                        <div className="flex space-x-4 mt-6">
+                        <div className="flex justify-center md:justify-start space-x-4 mt-6">
                             <a href="#" className="text-brand-cream/70 hover:text-brand-gold transition-colors"><Facebook size={20} /></a>
                             <a href="#" className="text-brand-cream/70 hover:text-brand-gold transition-colors"><Instagram size={20} /></a>
                             <a href="#" className="text-brand-cream/70 hover:text-brand-gold transition-colors"><Twitter size={20} /></a>
@@ -80,3 +80,4 @@ const Footer = () => {
 };
 
 export default Footer;
+

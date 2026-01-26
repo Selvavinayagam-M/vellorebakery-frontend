@@ -3,37 +3,45 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 
 // Layouts
 import MainLayout from '../layout/MainLayout';
+import AuthLayout from '../layout/AuthLayout';
 import AdminLayout from '../layout/AdminLayout';
 
 // Modules (Pages)
-import Home from '../modules/home/Home';
-import ProductsPage from '../modules/products/ProductsPage';
-import SweetsPage from '../modules/sweets/SweetsPage';
-import SnacksPage from '../modules/snacks/SnacksPage';
-import BakeryPage from '../modules/bakery/BakeryPage';
-import GiftingPage from '../modules/gifting/GiftingPage';
-import ProductDetails from '../modules/productDetails/ProductDetails';
-import Cart from '../modules/cart/Cart';
-import Checkout from '../modules/checkout/Checkout';
-import OrderSuccess from '../modules/order/OrderSuccess';
-import TrackOrderPage from '../modules/order/TrackOrderPage';
-import Login from '../modules/user/Login';
-import Profile from '../modules/user/Profile';
+import Home from '../features/home/Home';
+import ProductsPage from '../features/products/ProductsPage';
+import SweetsPage from '../features/sweets/SweetsPage';
+import SnacksPage from '../features/snacks/SnacksPage';
+import BakeryPage from '../features/bakery/BakeryPage';
+import GiftingPage from '../features/gifting/GiftingPage';
+import ProductDetails from '../features/productDetails/ProductDetails';
+import Cart from '../features/cart/Cart';
+import Checkout from '../features/checkout/Checkout';
+import OrderSuccess from '../features/orders/OrderSuccess';
+import TrackOrderPage from '../features/orders/TrackOrderPage';
+import Login from '../features/auth/Login';
+import Profile from '../features/auth/Profile';
+import AccountDetails from '../features/auth/AccountDetails';
 
 // Admin Modules
-import AdminDashboard from '../modules/admin/dashboard/Dashboard';
-import ProductList from '../modules/admin/products/ProductList';
-import AddEditProduct from '../modules/admin/products/AddEditProduct';
-import OrdersPage from '../modules/admin/orders/OrdersPage';
-import CustomersPage from '../modules/admin/customers/CustomersPage';
-import InventoryPage from '../modules/admin/inventory/InventoryPage';
-import ReportsPage from '../modules/admin/reports/ReportsPage';
-import SettingsPage from '../modules/admin/settings/SettingsPage';
+import AdminDashboard from '../features/admin/dashboard/Dashboard';
+import ProductList from '../features/admin/products/ProductList';
+import AddEditProduct from '../features/admin/products/AddEditProduct';
+import OrdersPage from '../features/admin/orders/OrdersPage';
+import CustomersPage from '../features/admin/customers/CustomersPage';
+import InventoryPage from '../features/admin/inventory/InventoryPage';
+import ReportsPage from '../features/admin/reports/ReportsPage';
+import SettingsPage from '../features/admin/settings/SettingsPage';
 import ProtectedRoute from './ProtectedRoute';
 
 const AppRoutes = () => {
     return (
         <Routes>
+            {/* Auth Routes - Wrapped in AuthLayout */}
+            <Route element={<AuthLayout />}>
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Login />} />
+            </Route>
+
             {/* Public Routes - Wrapped in MainLayout */}
             <Route element={<MainLayout />}>
                 <Route path="/" element={<Home />} />
@@ -47,8 +55,12 @@ const AppRoutes = () => {
                 <Route path="/checkout" element={<Checkout />} />
                 <Route path="/order-success" element={<OrderSuccess />} />
                 <Route path="/track-order" element={<TrackOrderPage />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/profile" element={<Profile />} />
+
+                {/* Protected User Routes */}
+                <Route element={<ProtectedRoute />}>
+                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/account/details" element={<AccountDetails />} />
+                </Route>
             </Route>
 
             {/* Admin Routes - Wrapped in ProtectedRoute & AdminLayout */}
@@ -78,3 +90,4 @@ const AppRoutes = () => {
 };
 
 export default AppRoutes;
+

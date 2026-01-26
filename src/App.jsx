@@ -1,17 +1,18 @@
 import React from 'react';
 import AppRoutes from './routes/AppRoutes';
-import ScrollToTop from './shared/components/ScrollToTop';
+import ScrollToTop from './components/ScrollToTop';
 
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
-import { fetchSettings } from './store/settingsSlice';
+import { fetchSettings } from './features/settings/settingsSlice';
+import { fetchCurrentUser } from './features/auth/userSlice';
 
 function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchSettings());
-    // Optional: Add logic here to validate token if needed, or rely on axios interceptors (better).
+    dispatch(fetchCurrentUser());
   }, [dispatch]);
 
   return (
@@ -23,3 +24,4 @@ function App() {
 }
 
 export default App;
+
