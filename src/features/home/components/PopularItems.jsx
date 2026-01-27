@@ -24,7 +24,11 @@ const PopularItems = ({ products }) => {
     );
 
     return (
+<<<<<<< HEAD
         <section className="py-20 bg-brand-cream/30 overflow-x-hidden">
+=======
+        <section className="py-20 bg-brand-cream/30">
+>>>>>>> 63c95fa90c53ffc457388675af0d65e5476b0090
             <div className="container mx-auto px-4">
                 <div className="flex flex-col md:flex-row justify-between items-end mb-12">
                     <div>

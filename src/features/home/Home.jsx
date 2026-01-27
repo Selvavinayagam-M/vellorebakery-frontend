@@ -39,7 +39,11 @@ const Home = () => {
     const popularProducts = products?.filter(p => p.flags?.isBestseller).slice(0, 4) || [];
 
     return (
+<<<<<<< HEAD
         <div className="bg-white min-h-screen pb-20 clip-horizontal">
+=======
+        <div className="bg-white min-h-screen pb-20">
+>>>>>>> 63c95fa90c53ffc457388675af0d65e5476b0090
             <HeroSection data={STATIC_HOME_DATA.hero} />
             <Categories categories={STATIC_HOME_DATA.categories} />
 

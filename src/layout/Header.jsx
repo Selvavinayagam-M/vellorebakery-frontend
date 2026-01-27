@@ -222,6 +222,7 @@ const Header = () => {
                             <Link to="/" className="flex flex-col justify-center relative z-20">
                                 {/* 
                                     Logo Container Sizing:
+<<<<<<< HEAD
                                     Mobile: h-12 to h-16
                                     Tablet: h-10 to h-12 (controlled via img sizing mostly, wrapper constrains pos)
                                     Desktop: h-10
@@ -231,6 +232,16 @@ const Header = () => {
                                         src={logoImg}
                                         alt="Vellore Sweets Logo"
                                         className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 md:top-0 md:left-0 md:translate-x-0 md:translate-y-0 max-w-none transition-all duration-500 object-contain ${useSolidHeader ? 'h-16 md:h-24 lg:h-28' : 'h-20 md:h-28 lg:h-40 drop-shadow-lg'}`}
+=======
+                                    Mobile: h-12 to h-16 (smaller to fit)
+                                    Desktop: h-10 (existing placeholder logic preserved or adjusted if needed, utilizing absolute positioning)
+                                */}
+                                <div className={`transition-all duration-500 relative ${useSolidHeader ? 'w-16 md:w-24 h-12 md:h-10' : 'w-24 md:w-36 h-16 md:h-10'}`}>
+                                    <img
+                                        src={logoImg}
+                                        alt="Vellore Sweets Logo"
+                                        className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 md:top-0 md:left-0 md:translate-x-0 md:translate-y-0 max-w-none transition-all duration-500 object-contain ${useSolidHeader ? 'h-16 md:h-28' : 'h-20 md:h-40 drop-shadow-lg'}`}
+>>>>>>> 63c95fa90c53ffc457388675af0d65e5476b0090
                                     />
                                 </div>
                             </Link>
@@ -250,7 +261,11 @@ const Header = () => {
                                     <div key={link.name} className="relative" onMouseEnter={() => setActiveMegaMenu(link.category)}>
                                         <Link
                                             to={link.path}
+<<<<<<< HEAD
                                             className={`px-2 lg:px-4 py-2 text-xs lg:text-sm font-bold uppercase tracking-wide rounded-full transition-all flex items-center gap-1 ${isActive || activeMegaMenu === link.category ? (useSolidHeader ? 'text-brand-mahogany bg-brand-turmeric/10' : 'text-white bg-white/20 backdrop-blur-sm') : navLinkClass}`}
+=======
+                                            className={`px-4 py-2 text-sm font-bold uppercase tracking-wide rounded-full transition-all flex items-center gap-1 ${isActive || activeMegaMenu === link.category ? (useSolidHeader ? 'text-brand-mahogany bg-brand-turmeric/10' : 'text-white bg-white/20 backdrop-blur-sm') : navLinkClass}`}
+>>>>>>> 63c95fa90c53ffc457388675af0d65e5476b0090
                                         >
                                             {link.name} {link.name !== 'Gifting' && <ChevronDown size={14} strokeWidth={2} />}
                                         </Link>
@@ -261,8 +276,13 @@ const Header = () => {
 
                         {/* RIGHT: Search (Desktop) & CTA / Mobile Icons - Column 3 (Right) */}
                         <div className="justify-self-end flex items-center gap-4 md:pt-3">
+<<<<<<< HEAD
                             {/* Desktop Search - Hidden on Tablet (md), Visible on Desktop (lg) */}
                             <div className="hidden md:flex md:w-32 lg:w-56">
+=======
+                            {/* Desktop Search */}
+                            <div className="hidden md:flex w-56">
+>>>>>>> 63c95fa90c53ffc457388675af0d65e5476b0090
                                 <div className="relative group w-full">
                                     <Search className={`absolute left-3 top-1/2 -translate-y-1/2 transition-colors ${searchIconClass}`} size={16} />
                                     <input
@@ -276,7 +296,11 @@ const Header = () => {
                                 </div>
                             </div>
 
+<<<<<<< HEAD
                             {/* Mobile/Tablet Icons - Hidden on Tablet (md) now that search bar is visible */}
+=======
+                            {/* Mobile Icons */}
+>>>>>>> 63c95fa90c53ffc457388675af0d65e5476b0090
                             <div className={`flex md:hidden items-center gap-3 ${textColorClass}`}>
                                 <button onClick={() => setShowMobileSearch(!showMobileSearch)}>
                                     <Search size={22} />

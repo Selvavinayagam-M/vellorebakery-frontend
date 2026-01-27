@@ -66,10 +66,13 @@
   .text-shadow {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
   }
+<<<<<<< HEAD
 }
 
 @layer utilities {
   .clip-horizontal {
     @apply w-full max-w-[100vw] overflow-x-hidden;
   }
+=======
+>>>>>>> 63c95fa90c53ffc457388675af0d65e5476b0090
 }
