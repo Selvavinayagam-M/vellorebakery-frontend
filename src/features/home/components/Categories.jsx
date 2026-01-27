@@ -113,11 +113,7 @@ const CategoryCard = ({ item, index }) => {
 
 const Categories = () => {
     return (
-<<<<<<< HEAD
         <section className="py-20 md:py-32 bg-brand-beige/10 overflow-hidden">
-=======
-        <section className="py-20 md:py-32 bg-brand-beige/10">
->>>>>>> 63c95fa90c53ffc457388675af0d65e5476b0090
             <div className="container mx-auto px-4 md:px-8">
                 {/* Section Header */}
                 <div className="text-center mb-12 md:mb-16">

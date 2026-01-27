@@ -72,11 +72,7 @@ const BakeryCombos = () => {
                     <p className="text-gray-500 max-w-2xl mx-auto">Perfectly paired treats for every occasion, from your evening tea to grand celebrations.</p>
                 </div>
 
-<<<<<<< HEAD
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-=======
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
->>>>>>> 63c95fa90c53ffc457388675af0d65e5476b0090
                     {combos.map((combo, index) => (
                         <motion.div
                             key={combo.id}

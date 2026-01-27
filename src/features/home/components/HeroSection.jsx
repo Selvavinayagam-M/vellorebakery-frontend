@@ -51,11 +51,7 @@ const HeroSection = () => {
 
     return (
         // Full screen immersive hero
-<<<<<<< HEAD
         <section className="relative w-full h-[100dvh] min-h-[600px] flex items-center bg-brand-black group overflow-hidden clip-horizontal">
-=======
-        <section className="relative w-full h-[100dvh] min-h-[600px] flex items-center bg-brand-black group overflow-hidden">
->>>>>>> 63c95fa90c53ffc457388675af0d65e5476b0090
             {/* Watermark Logo */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-1 pointer-events-none opacity-[0.03]">
                 <img src="../../../assets/images/logo/vellore-sweets-logo.png" alt="" className="w-[600px] max-w-none grayscale" />
@@ -99,20 +95,12 @@ const HeroSection = () => {
                     </div>
 
                     {/* Headline */}
-<<<<<<< HEAD
                     <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-serif font-bold mb-4 md:mb-6 leading-tight tracking-tight text-shadow-lg text-brand-cream whitespace-normal border-none text-center">
-=======
-                    <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-serif font-bold mb-4 md:mb-6 leading-tight tracking-tight text-shadow-lg text-brand-cream whitespace-normal md:whitespace-nowrap border-none text-center">
->>>>>>> 63c95fa90c53ffc457388675af0d65e5476b0090
                         {SLIDES[currentSlide].title}
                     </h1>
 
                     {/* Subtitle */}
-<<<<<<< HEAD
                     <p className="text-base md:text-lg lg:text-xl text-brand-cream/90 mb-6 md:mb-8 max-w-2xl mx-auto leading-relaxed font-light font-sans tracking-wide">
-=======
-                    <p className="text-base md:text-xl text-brand-cream/90 mb-6 md:mb-8 max-w-2xl mx-auto leading-relaxed font-light font-sans tracking-wide">
->>>>>>> 63c95fa90c53ffc457388675af0d65e5476b0090
                         {SLIDES[currentSlide].subtitle}
                     </p>
 

@@ -12,11 +12,7 @@ const Footer = () => {
     return (
         <footer className="bg-brand-black text-brand-cream pt-16 pb-8">
             <div className="container mx-auto px-4">
-<<<<<<< HEAD
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-12 mb-12">
-=======
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-12 mb-12">
->>>>>>> 63c95fa90c53ffc457388675af0d65e5476b0090
                     {/* Brand */}
                     <div className="space-y-4 text-center md:text-left">
                         <Link to="/" className="text-3xl font-serif font-bold text-white tracking-tight inline-block">
