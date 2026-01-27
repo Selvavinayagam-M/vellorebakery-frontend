@@ -50,7 +50,7 @@ export const fetchCurrentUser = createAsyncThunk(
     }
 );
 
-const token = localStorage.getItem('token');
+const token = localStorage.getItem('userToken');
 let user = null;
 try {
     user = JSON.parse(localStorage.getItem('user'));
@@ -73,6 +73,8 @@ const userSlice = createSlice({
             state.isAuthenticated = false;
             state.currentUser = null;
             state.error = null;
+            localStorage.removeItem('userToken');
+            localStorage.removeItem('user');
         },
         // Keep simple sync update for optimistic or partial updates if needed
         updateProfileSync: (state, action) => {
@@ -89,8 +91,12 @@ const userSlice = createSlice({
             })
             .addCase(loginUser.fulfilled, (state, action) => {
                 state.loading = false;
-                state.isAuthenticated = true;
-                state.currentUser = action.payload;
+                const user = action.payload;
+                // CUSTOMER ONLY
+                if (user.role !== 'admin' && user.role !== 'superadmin') {
+                    state.isAuthenticated = true;
+                    state.currentUser = user;
+                }
             })
             .addCase(loginUser.rejected, (state, action) => {
                 state.loading = false;
@@ -132,7 +138,7 @@ const userSlice = createSlice({
                 state.isAuthenticated = false;
                 state.currentUser = null;
                 // If token is invalid, clear it
-                localStorage.removeItem('token');
+                localStorage.removeItem('userToken');
                 localStorage.removeItem('user');
             });
     }

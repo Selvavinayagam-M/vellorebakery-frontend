@@ -1,12 +1,11 @@
 import axios from 'axios';
 
-// Create Axios instance
-// Get Base URL from env or default
+
 let baseURL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
-// Ensure it ends with /api to prevent 404s if user forgets it in Env Vars
+
 if (!baseURL.endsWith('/api')) {
-    // Remove trailing slash if present then append /api
+   
     baseURL = baseURL.replace(/\/$/, '') + '/api';
 }
 
@@ -20,7 +19,12 @@ const apiClient = axios.create({
 // Request Interceptor: Attach Token
 apiClient.interceptors.request.use(
     (config) => {
-        const token = localStorage.getItem('token');
+        // Check if we are making a request from an Admin page
+        const isAdminRoute = window.location.pathname.startsWith('/admin');
+        const token = isAdminRoute
+            ? localStorage.getItem('adminToken')
+            : localStorage.getItem('userToken');
+
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }

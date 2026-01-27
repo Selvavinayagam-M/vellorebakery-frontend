@@ -5,9 +5,13 @@ export const login = async (email, password) => {
     const credentials = { email, password };
     const response = await apiClient.post('/auth/login', credentials);
     if (response.data.token) {
-        localStorage.setItem('token', response.data.token);
-        // Also store user info if needed, though slice usually handles it
-        localStorage.setItem('user', JSON.stringify(response.data));
+        if (response.data.role === 'admin' || response.data.role === 'superadmin') {
+            localStorage.setItem('adminToken', response.data.token);
+            localStorage.setItem('adminUser', JSON.stringify(response.data));
+        } else {
+            localStorage.setItem('userToken', response.data.token);
+            localStorage.setItem('user', JSON.stringify(response.data));
+        }
     }
     return response.data;
 };
@@ -16,15 +20,21 @@ export const register = async (name, email, password) => {
     const userData = { name, email, password };
     const response = await apiClient.post('/auth/register', userData);
     if (response.data.token) {
-        localStorage.setItem('token', response.data.token);
+        // Registration is always for customers initially unless specific admin flow exists
+        localStorage.setItem('userToken', response.data.token);
         localStorage.setItem('user', JSON.stringify(response.data));
     }
     return response.data;
 };
 
-export const logout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+export const logout = (role = 'user') => {
+    if (role === 'admin') {
+        localStorage.removeItem('adminToken');
+        localStorage.removeItem('adminUser');
+    } else {
+        localStorage.removeItem('userToken');
+        localStorage.removeItem('user');
+    }
 };
 
 export const getProfile = async () => {

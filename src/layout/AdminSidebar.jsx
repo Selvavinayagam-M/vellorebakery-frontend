@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { LayoutDashboard, Package, ShoppingCart, Users, Truck, FileText, Settings, LogOut, X } from 'lucide-react';
-import { logout } from '../features/auth/userSlice';
+import { logoutAdmin } from '../features/auth/adminAuthSlice';
 
 const Sidebar = ({ isOpen, onClose }) => {
     const location = useLocation();
@@ -21,7 +21,7 @@ const Sidebar = ({ isOpen, onClose }) => {
 
     const handleLogout = () => {
         if (window.confirm('Are you sure you want to logout?')) {
-            dispatch(logout());
+            dispatch(logoutAdmin());
             navigate('/login');
         }
     };

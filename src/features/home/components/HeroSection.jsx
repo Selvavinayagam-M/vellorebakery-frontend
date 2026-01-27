@@ -100,7 +100,7 @@ const HeroSection = () => {
                     </h1>
 
                     {/* Subtitle */}
-                    <p className="text-base md:text-lg lg:text-xl text-brand-cream/90 mb-6 md:mb-8 max-w-2xl mx-auto leading-relaxed font-light font-sans tracking-wide">
+                    <p className="text-base md:text-lg lg:text-xl text-brand-cream/90 mb-6 md:mb-8 max-w-2xl lg:max-w-none lg:whitespace-nowrap mx-auto leading-relaxed font-light font-sans tracking-wide">
                         {SLIDES[currentSlide].subtitle}
                     </p>
 

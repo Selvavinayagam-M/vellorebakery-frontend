@@ -18,10 +18,12 @@ import adminCustomersReducer from '../features/admin/customers/adminCustomersSli
 import adminInventoryReducer from '../features/admin/inventory/adminInventorySlice';
 import adminReportsReducer from '../features/admin/reports/adminReportsSlice';
 import settingsReducer from '../features/settings/settingsSlice';
+import adminAuthReducer from '../features/auth/adminAuthSlice';
 
 export const store = configureStore({
     reducer: {
         user: userReducer,
+        adminAuth: adminAuthReducer, // New Admin Auth Slice
         products: productsReducer,
         productDetails: productDetailsReducer,
         cart: cartReducer,
@@ -38,7 +40,7 @@ export const store = configureStore({
         adminOrders: adminOrdersReducer,
         adminCustomers: adminCustomersReducer,
         adminInventory: adminInventoryReducer,
-        adminReports: adminReportsReducer, 
+        adminReports: adminReportsReducer,
         settings: settingsReducer,
     },
 });
