@@ -7,7 +7,7 @@ import { LOGO_IMAGES } from '../assets/images';
 const logoImg = LOGO_IMAGES.main;
 
 const Footer = () => {
-    const settings = useSelector((state) => state.settings);
+
 
     return (
         <footer className="bg-brand-black text-brand-cream pt-16 pb-8">
@@ -48,15 +48,15 @@ const Footer = () => {
                         <ul className="space-y-4 text-sm text-brand-cream/70">
                             <li className="flex items-start space-x-3">
                                 <MapPin size={18} className="mt-1 flex-shrink-0 text-brand-gold" />
-                                <span>{settings.address}</span>
+                                <span>No.3, Kagithapattarai, Vellore,<br />Tamil Nadu</span>
                             </li>
                             <li className="flex items-center space-x-3">
                                 <Phone size={18} className="text-brand-gold" />
-                                <span>{settings.contactPhone}</span>
+                                <span>+91 8825965775</span>
                             </li>
                             <li className="flex items-center space-x-3">
                                 <Mail size={18} className="text-brand-gold" />
-                                <span>{settings.contactEmail}</span>
+                                <span>contact@velloresweets.com</span>
                             </li>
                         </ul>
                         <div className="flex justify-center md:justify-start space-x-4 mt-6">
@@ -68,7 +68,7 @@ const Footer = () => {
                 </div>
 
                 <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
-                    <p>© {new Date().getFullYear()} {settings.storeName}. All rights reserved.</p>
+                    <p>© {new Date().getFullYear()} Vellore Sweets & Snacks. All rights reserved.</p>
                     <div className="flex space-x-6 mt-4 md:mt-0">
                         <Link to="/terms" className="hover:text-brand-gold">Terms of Service</Link>
                         <Link to="/privacy" className="hover:text-brand-gold">Privacy Policy</Link>

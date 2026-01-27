@@ -19,7 +19,7 @@ const Header = () => {
 
     const { totalItems } = useSelector((state) => state.cart);
     const { currentUser } = useSelector((state) => state.user);
-    const settings = useSelector((state) => state.settings);
+    
     const dispatch = useDispatch();
     const location = useLocation();
     const navigate = useNavigate();
@@ -103,10 +103,10 @@ const Header = () => {
                         {/* Left: Location/Contact */}
                         <div className="flex items-center space-x-6">
                             <span className="flex items-center gap-1.5 opacity-90 hover:opacity-100 cursor-default">
-                                <MapPin size={12} /> {settings.city || 'Vellore'} & Surroundings
+                                <MapPin size={12} /> Vellore & Surroundings
                             </span>
                             <span className="flex items-center gap-1.5 opacity-90 hover:opacity-100 cursor-default">
-                                <Phone size={12} /> {settings.contactPhone}
+                                <Phone size={12} /> +91 8825965775
                             </span>
                         </div>
 
@@ -221,10 +221,7 @@ const Header = () => {
                         <div className="justify-self-center md:justify-self-start">
                             <Link to="/" className="flex flex-col justify-center relative z-20">
                                 {/* 
-                                    Logo Container Sizing:
-                                    Mobile: h-12 to h-16
-                                    Tablet: h-10 to h-12 (controlled via img sizing mostly, wrapper constrains pos)
-                                    Desktop: h-10
+                                    Logo Size and Style Changes Based on Scroll/Page
                                 */}
                                 <div className={`transition-all duration-500 relative ${useSolidHeader ? 'w-16 md:w-24 lg:w-24 h-12 md:h-10' : 'w-24 md:w-28 lg:w-36 h-16 md:h-10'}`}>
                                     <img

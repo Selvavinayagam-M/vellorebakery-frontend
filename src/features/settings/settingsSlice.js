@@ -36,10 +36,10 @@ export const updateSettings = createAsyncThunk(
 
 const initialState = {
     // Default Fallbacks
-    storeName: 'Vellore Sweets',
+    storeName: 'Vellore Sweets & Snacks',
     contactEmail: 'contact@velloresweets.com',
-    contactPhone: '+91 9876543210',
-    address: '123, Gandhi Road, Vellore, Tamil Nadu',
+    contactPhone: '+91 8825965775',
+    address: 'No.03,Kagithapattarai, Vellore, Tamil Nadu',
     currency: '₹',
     taxRate: 5,
     deliveryCharge: 40,

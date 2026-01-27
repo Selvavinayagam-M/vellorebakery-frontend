@@ -54,60 +54,7 @@ const SettingsPage = () => {
             )}
 
             <div className="space-y-6">
-                {/* Store Details */}
-                <section className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div className="p-6 border-b border-gray-100 flex items-center gap-3">
-                        <div className="p-2 bg-brand-mahogany/10 text-brand-mahogany rounded-lg">
-                            <Store size={20} />
-                        </div>
-                        <h2 className="text-lg font-bold text-gray-800">Store Information</h2>
-                    </div>
-                    <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Store Name</label>
-                            <input
-                                type="text"
-                                name="storeName"
-                                value={formData.storeName}
-                                onChange={handleChange}
-                                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-brand-mahogany focus:border-transparent outline-none"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Contact Email</label>
-                            <input
-                                type="email"
-                                name="contactEmail"
-                                value={formData.contactEmail}
-                                onChange={handleChange}
-                                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-brand-mahogany focus:border-transparent outline-none"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Support Phone</label>
-                            <input
-                                type="text"
-                                name="contactPhone"
-                                value={formData.contactPhone}
-                                onChange={handleChange}
-                                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-brand-mahogany focus:border-transparent outline-none"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Currency</label>
-                            <select
-                                name="currency"
-                                value={formData.currency}
-                                onChange={handleChange}
-                                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-brand-mahogany focus:border-transparent outline-none"
-                            >
-                                <option value="INR">INR (₹)</option>
-                                <option value="USD">USD ($)</option>
-                                <option value="EUR">EUR (€)</option>
-                            </select>
-                        </div>
-                    </div>
-                </section>
+               
 
                 {/* Delivery & Tax */}
                 <section className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
