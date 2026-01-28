@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Filter, Search, SlidersHorizontal, ChevronDown, ShoppingCart, User, Heart, X } from 'lucide-react';
 import { addToCart } from '../../features/cart/cartSlice';
 import ProductCard from '../../components/ProductCard';
-import ProductCardSkeleton from '../../components/ProductCard'; // Using same card for now or create skeleton later
+import ProductCardSkeleton from '../../components/ProductCard'; // Using same card for now as skeleton
 import Button from '../../components/Button';
 
 
@@ -17,7 +17,18 @@ const ProductsPage = () => {
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [localPriceRange, setLocalPriceRange] = useState(filters.priceRange);
 
-    // Parse query params for initial category
+    
+    const currentCategoryItems = React.useMemo(() => {
+        return items.filter(product => filters.category === 'all' || product.category === filters.category);
+    }, [items, filters.category]);
+
+    const minCategoryPrice = React.useMemo(() => {
+        if (currentCategoryItems.length === 0) return 0;
+        const prices = currentCategoryItems.map(p => p.price);
+        return Math.min(...prices);
+    }, [currentCategoryItems]);
+
+    
     useEffect(() => {
         dispatch(fetchProducts());
         const params = new URLSearchParams(location.search);
@@ -28,6 +39,13 @@ const ProductsPage = () => {
             dispatch(setFilterCategory('all'));
         }
     }, [location, dispatch]);
+
+    // Reset price range when category changes
+    useEffect(() => {
+        setLocalPriceRange([0, 2000]);
+        dispatch(setPriceRange([0, 2000]));
+    }, [filters.category, dispatch]);
+
 
     const filteredProducts = items.filter(product => {
         const params = new URLSearchParams(location.search);
@@ -117,15 +135,16 @@ const ProductsPage = () => {
                             <div>
                                 <h4 className="font-medium text-gray-700 mb-3">Price Range</h4>
                                 <div className="flex items-center justify-between text-sm text-gray-500 mb-2">
-                                    <span>₹{localPriceRange[0]}</span>
-                                    <span>₹{localPriceRange[1]}</span>
+                                    <span>₹0</span>
+    
+                                    <span>₹{Math.max(localPriceRange[1], minCategoryPrice)}</span>
                                 </div>
                                 <input
                                     type="range"
-                                    min="0"
+                                    min={minCategoryPrice}
                                     max="2000"
                                     step="50"
-                                    value={localPriceRange[1]}
+                                    value={Math.max(localPriceRange[1], minCategoryPrice)}
                                     onChange={(e) => {
                                         const val = parseInt(e.target.value);
                                         setLocalPriceRange([0, val]);

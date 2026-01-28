@@ -67,8 +67,8 @@ const WhyLoveUs = ({ features }) => {
     const displayFeatures = features || FEATURES_DATA;
 
     return (
-        <section className="py-24 bg-brand-coconut overflow-hidden">
-            <div className="container mx-auto px-4">
+        <section className="py-24 md:py-32 bg-brand-coconut overflow-hidden">
+            <div className="container mx-auto px-4 md:px-8">
                 {/* Section Header */}
                 <div className="text-center mb-20">
                     <motion.div

@@ -26,7 +26,7 @@ import s3img2 from './craftedwithcare/section3/section3-img2.png';
 import s3img3 from './craftedwithcare/section3/section3-img3.png';
 
 // Logo
-import brandLogo from './logo/vellore-sweets-logo.png';
+import brandLogo from './logo/vellore-sweets-logo-transparent.png';
 
 export const CRAFTED_IMAGES = {
     section1: [s1img1, s1img2, s1img3],
