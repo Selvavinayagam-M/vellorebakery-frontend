@@ -24,8 +24,8 @@ const PopularItems = ({ products }) => {
     );
 
     return (
-        <section className="py-20 bg-brand-cream/30 overflow-x-hidden">
-            <div className="container mx-auto px-4">
+        <section className="py-24 md:py-32 bg-brand-cream/30 overflow-x-hidden">
+            <div className="container mx-auto px-4 md:px-8">
                 <div className="flex flex-col md:flex-row justify-between items-end mb-12">
                     <div>
                         <h2 className="text-4xl font-serif font-bold text-brand-maroon mb-2">Customer Favorites</h2>
@@ -38,8 +38,7 @@ const PopularItems = ({ products }) => {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                     {products?.map((product, index) => {
-                        // Logic: First 2 from Left (-60), Last 2 from Right (60)
-                        // For mobile (small screens), we might want simpler up-fade, but here we enforce the requested logic
+                       
                         const initialX = index < 2 ? -60 : 60;
 
                         return (

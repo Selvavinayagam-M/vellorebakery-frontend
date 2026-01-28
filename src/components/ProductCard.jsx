@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
-import { Star, ShoppingBag, Heart, Eye, Clock } from 'lucide-react';
+import { Star, ShoppingBag, Heart, Clock } from 'lucide-react';
 import { addToCart } from '../features/cart/cartSlice';
 import { toggleFavourite } from '../features/favourites/favouritesSlice';
 import { showToast, openCart } from '../features/ui/uiSlice';
@@ -20,7 +20,7 @@ const ProductCard = ({ product }) => {
 
     if (!product) return null;
 
-    // MongoDB uses _id, ensure we have a valid identifier
+    // MongoDB uses _id, 
     const productId = product.id || product._id;
 
     const isFavourite = favouriteIds.includes(productId);
@@ -40,13 +40,6 @@ const ProductCard = ({ product }) => {
         dispatch(showToast({
             message: isFavourite ? `Removed from favorites` : `Added to favorites`
         }));
-    };
-
-    const handleQuickView = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        // Placeholder for Quick View functionality
-        console.log("Quick view for", product.name);
     };
 
     return (
@@ -100,13 +93,6 @@ const ProductCard = ({ product }) => {
                         aria-label="Add to wishlist"
                     >
                         <Heart size={18} className={isFavourite ? "fill-red-500 text-red-500" : "text-gray-600 hover:text-red-500"} />
-                    </button>
-                    <button
-                        onClick={handleQuickView}
-                        className="p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-md hover:bg-white transition-all transform hover:scale-110 active:scale-95 focus:outline-none md:opacity-0 md:translate-x-4 md:group-hover:opacity-100 md:group-hover:translate-x-0 duration-300 delay-100"
-                        aria-label="Quick view"
-                    >
-                        <Eye size={18} className="text-gray-600 hover:text-brand-mahogany" />
                     </button>
                 </div>
             </div>

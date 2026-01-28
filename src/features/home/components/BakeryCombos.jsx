@@ -65,8 +65,8 @@ const BakeryCombos = () => {
     };
 
     return (
-        <section className="py-20 bg-white">
-            <div className="container mx-auto px-4">
+        <section className="py-24 md:py-32 bg-white">
+            <div className="container mx-auto px-4 md:px-8">
                 <div className="text-center mb-16">
                     <h2 className="text-4xl md:text-5xl font-serif font-bold text-brand-mahogany mb-4">Curated Bakery Combos</h2>
                     <p className="text-gray-500 max-w-2xl mx-auto">Perfectly paired treats for every occasion, from your evening tea to grand celebrations.</p>

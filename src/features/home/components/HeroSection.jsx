@@ -79,7 +79,7 @@ const HeroSection = () => {
             </div>
 
             {/* Content Overlay */}
-            <div className="container mx-auto px-[clamp(1.5rem,5vw,5rem)] relative z-10 text-center text-white h-full flex flex-col justify-end items-center pb-20 md:pb-28">
+            <div className="container mx-auto px-[clamp(1.5rem,5vw,5rem)] relative z-10 text-center text-white h-full flex flex-col justify-center lg:justify-end items-center pb-0 lg:pb-28">
                 <motion.div
                     key={`content-${currentSlide}`}
                     initial={{ opacity: 0, y: 20 }}
@@ -135,7 +135,7 @@ const HeroSection = () => {
                 ))}
             </div>
 
-            {/* Navigation Arrows Removed */}
+           
         </section>
     );
 };
